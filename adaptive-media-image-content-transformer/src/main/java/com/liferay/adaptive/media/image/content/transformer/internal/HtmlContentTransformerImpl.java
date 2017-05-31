@@ -48,6 +48,10 @@ public class HtmlContentTransformerImpl implements ContentTransformer<String> {
 			return null;
 		}
 
+		if (!html.contains("<img ")) {
+			return html;
+		}
+
 		StringBuffer sb = new StringBuffer(html.length());
 
 		Matcher matcher = _IMG_PATTERN.matcher(html);
