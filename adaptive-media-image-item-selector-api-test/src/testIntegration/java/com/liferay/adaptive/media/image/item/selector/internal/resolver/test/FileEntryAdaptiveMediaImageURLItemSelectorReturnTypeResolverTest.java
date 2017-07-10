@@ -16,6 +16,7 @@ package com.liferay.adaptive.media.image.item.selector.internal.resolver.test;
 
 import com.liferay.adaptive.media.image.configuration.AdaptiveMediaImageConfigurationEntry;
 import com.liferay.adaptive.media.image.configuration.AdaptiveMediaImageConfigurationHelper;
+import com.liferay.adaptive.media.internal.messaging.AdaptiveMediaDestinationNames;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
@@ -64,7 +65,9 @@ import org.junit.runner.RunWith;
  * @author Sergio González
  */
 @RunWith(Arquillian.class)
-@Sync
+@Sync(
+	destinationNames = {AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR}
+)
 public class FileEntryAdaptiveMediaImageURLItemSelectorReturnTypeResolverTest {
 
 	@ClassRule
@@ -122,7 +125,7 @@ public class FileEntryAdaptiveMediaImageURLItemSelectorReturnTypeResolverTest {
 	@Test
 	public void testAddingFileEntryWithHDMediaQueries() throws Exception {
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			_addTestVariant("small", "uuid0", 50, 50);
 			_addTestVariant("small.hd", "uuid1", 100, 100);
@@ -169,7 +172,7 @@ public class FileEntryAdaptiveMediaImageURLItemSelectorReturnTypeResolverTest {
 	@Test
 	public void testAddingFileEntryWithImageCreatesMedia() throws Exception {
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			_addTestVariant("small", "uuid0", 50, 50);
 			_addTestVariant("big", "uuid1", 400, 280);
@@ -223,7 +226,7 @@ public class FileEntryAdaptiveMediaImageURLItemSelectorReturnTypeResolverTest {
 		throws Exception {
 
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			ServiceContext serviceContext =
 				ServiceContextTestUtil.getServiceContext(
@@ -267,7 +270,7 @@ public class FileEntryAdaptiveMediaImageURLItemSelectorReturnTypeResolverTest {
 		throws Exception {
 
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			_addTestVariant("small", "uuid0", 50, 50);
 			_addTestVariant("small.hd", "uuid1", 101, 100);
@@ -311,7 +314,7 @@ public class FileEntryAdaptiveMediaImageURLItemSelectorReturnTypeResolverTest {
 		throws Exception {
 
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			_addTestVariant("small", "uuid0", 50, 50);
 			_addTestVariant("small.hd", "uuid1", 100, 99);
@@ -355,7 +358,7 @@ public class FileEntryAdaptiveMediaImageURLItemSelectorReturnTypeResolverTest {
 		throws Exception {
 
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			ServiceContext serviceContext =
 				ServiceContextTestUtil.getServiceContext(
@@ -399,7 +402,7 @@ public class FileEntryAdaptiveMediaImageURLItemSelectorReturnTypeResolverTest {
 		throws Exception {
 
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			ServiceContext serviceContext =
 				ServiceContextTestUtil.getServiceContext(
@@ -443,7 +446,7 @@ public class FileEntryAdaptiveMediaImageURLItemSelectorReturnTypeResolverTest {
 		throws Exception {
 
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			ServiceContext serviceContext =
 				ServiceContextTestUtil.getServiceContext(
@@ -487,7 +490,7 @@ public class FileEntryAdaptiveMediaImageURLItemSelectorReturnTypeResolverTest {
 		throws Exception {
 
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			_addTestVariant("small", "uuid0", 50, 50);
 			_addTestVariant("small.hd", "uuid1", 200, 98);
@@ -531,7 +534,7 @@ public class FileEntryAdaptiveMediaImageURLItemSelectorReturnTypeResolverTest {
 		throws Exception {
 
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			_addTestVariant("small", "uuid0", 50, 50);
 			_addTestVariant("small.hd", "uuid1", 200, 102);

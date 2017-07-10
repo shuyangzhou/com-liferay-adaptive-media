@@ -16,6 +16,6 @@
 
 <%@ include file="/blogs/init.jsp" %>
 
-<%@ page import="com.liferay.adaptive.media.blogs.web.internal.filter.ContentTransformerUtil" %><%@
+<%@ page import="com.liferay.adaptive.media.blogs.web.fragment.internal.ContentTransformerUtil" %><%@
 page import="com.liferay.adaptive.media.content.transformer.ContentTransformerHandler" %><%@
 page import="com.liferay.adaptive.media.content.transformer.constants.ContentTransformerContentTypes" %>

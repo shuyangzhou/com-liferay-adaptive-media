@@ -324,8 +324,7 @@ public class AdaptiveMediaImageEntryLocalServiceImpl
 		return adaptiveMediaImageCounterStream.mapToInt(
 			adaptiveMediaImageCounter ->
 				adaptiveMediaImageCounter.
-					countExpectedAdaptiveMediaImageEntries(
-						companyId)
+					countExpectedAdaptiveMediaImageEntries(companyId)
 		).sum();
 	}
 

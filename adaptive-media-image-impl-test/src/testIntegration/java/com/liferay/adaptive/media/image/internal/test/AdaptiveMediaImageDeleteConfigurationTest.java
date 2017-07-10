@@ -19,6 +19,7 @@ import com.liferay.adaptive.media.image.configuration.AdaptiveMediaImageConfigur
 import com.liferay.adaptive.media.image.configuration.AdaptiveMediaImageConfigurationHelper;
 import com.liferay.adaptive.media.image.internal.test.util.DestinationReplacer;
 import com.liferay.adaptive.media.image.service.AdaptiveMediaImageEntryLocalServiceUtil;
+import com.liferay.adaptive.media.internal.messaging.AdaptiveMediaDestinationNames;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
@@ -54,7 +55,9 @@ import org.junit.runner.RunWith;
  * @author Sergio González
  */
 @RunWith(Arquillian.class)
-@Sync
+@Sync(
+	destinationNames = {AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR}
+)
 public class AdaptiveMediaImageDeleteConfigurationTest
 	extends BaseAdaptiveMediaImageConfigurationTestCase {
 
@@ -202,7 +205,7 @@ public class AdaptiveMediaImageDeleteConfigurationTest
 	@Test
 	public void testDeleteConfigurationEntryWithImages() throws Exception {
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			AdaptiveMediaImageConfigurationHelper
 				adaptiveMediaImageConfigurationHelper =
@@ -607,7 +610,7 @@ public class AdaptiveMediaImageDeleteConfigurationTest
 	@Test
 	public void testForceDeleteConfigurationEntryWithImages() throws Exception {
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			AdaptiveMediaImageConfigurationHelper
 				adaptiveMediaImageConfigurationHelper =

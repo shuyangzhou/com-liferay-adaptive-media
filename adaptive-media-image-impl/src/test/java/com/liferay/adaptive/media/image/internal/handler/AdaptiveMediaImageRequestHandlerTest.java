@@ -380,8 +380,7 @@ public class AdaptiveMediaImageRequestHandlerTest {
 		Mockito.when(
 			_pathInterpreter.interpretPath(request.getPathInfo())
 		).thenReturn(
-			Optional.of(
-				Tuple.of(fileVersion, pathProperties))
+			Optional.of(Tuple.of(fileVersion, pathProperties))
 		);
 
 		return request;

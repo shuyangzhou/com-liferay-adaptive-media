@@ -21,6 +21,7 @@ import com.liferay.adaptive.media.image.configuration.AdaptiveMediaImageConfigur
 import com.liferay.adaptive.media.image.finder.AdaptiveMediaImageFinder;
 import com.liferay.adaptive.media.image.processor.AdaptiveMediaImageProcessor;
 import com.liferay.adaptive.media.image.service.AdaptiveMediaImageEntryLocalServiceUtil;
+import com.liferay.adaptive.media.internal.messaging.AdaptiveMediaDestinationNames;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
@@ -84,7 +85,9 @@ import org.osgi.util.promise.Promise;
  * @author Adolfo Pérez
  */
 @RunWith(Arquillian.class)
-@Sync
+@Sync(
+	destinationNames = {AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR}
+)
 public class AdaptiveMediaThumbnailsOSGiCommandsTest {
 
 	@ClassRule
@@ -172,7 +175,7 @@ public class AdaptiveMediaThumbnailsOSGiCommandsTest {
 	public void testCleanUpDeletesImageThumbnails() throws Exception {
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
 				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR,
-				_ADAPTIVE_MEDIA_PROCESSOR)) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			int count = _getThumbnailCount();
 
@@ -190,7 +193,7 @@ public class AdaptiveMediaThumbnailsOSGiCommandsTest {
 	public void testCleanUpDeletesOnlyImageThumbnails() throws Exception {
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
 				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR,
-				_ADAPTIVE_MEDIA_PROCESSOR)) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			int count = _getThumbnailCount();
 
@@ -209,7 +212,7 @@ public class AdaptiveMediaThumbnailsOSGiCommandsTest {
 	public void testMigrateDoesNotRemoveThumbnails() throws Exception {
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
 				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR,
-				_ADAPTIVE_MEDIA_PROCESSOR)) {
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR)) {
 
 			int count = _getThumbnailCount();
 
@@ -228,7 +231,7 @@ public class AdaptiveMediaThumbnailsOSGiCommandsTest {
 	public void testMigrateOnlyProcessesImages() throws Exception {
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
 				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR,
-				_ADAPTIVE_MEDIA_PROCESSOR);
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR);
 			PropsValuesReplacer propsValuesReplacer1 = new PropsValuesReplacer(
 				"DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_HEIGHT", 100);
 			PropsValuesReplacer propsValuesReplacer2 = new PropsValuesReplacer(
@@ -250,7 +253,7 @@ public class AdaptiveMediaThumbnailsOSGiCommandsTest {
 
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
 				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR,
-				_ADAPTIVE_MEDIA_PROCESSOR);
+				AdaptiveMediaDestinationNames.ADAPTIVE_MEDIA_PROCESSOR);
 			PropsValuesReplacer propsValuesReplacer1 = new PropsValuesReplacer(
 				"DL_FILE_ENTRY_THUMBNAIL_MAX_HEIGHT", 999);
 			PropsValuesReplacer propsValuesReplacer2 = new PropsValuesReplacer(
@@ -428,9 +431,6 @@ public class AdaptiveMediaThumbnailsOSGiCommandsTest {
 			service,
 			(Object)new String[] {String.valueOf(_company.getCompanyId())});
 	}
-
-	private static final String _ADAPTIVE_MEDIA_PROCESSOR =
-		"liferay/adaptive_media_processor";
 
 	private static final String _BUNDLE_SYMBOLIC_NAME =
 		"com.liferay.adaptive.media.document.library";

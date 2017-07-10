@@ -17,6 +17,7 @@ class EditAdaptiveMediaConfig extends PortletBase {
 	 */
 	created() {
 		this.eventHandler_ = new EventHandler();
+		this.validInputKeyCodes_ = [8, 9, 13, 38, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
 	}
 
 	/**
@@ -50,6 +51,10 @@ class EditAdaptiveMediaConfig extends PortletBase {
 		let maxHeightInput = this.one('#maxHeight');
 
 		if (maxWidthInput) {
+			this.eventHandler_.add(maxWidthInput.addEventListener('keydown', (event) => {
+				this.handleKeyDown_(event);
+			}));
+
 			this.eventHandler_.add(maxWidthInput.addEventListener('input', (event) => {
 				this.validateDimensions_(true);
 			}));
@@ -60,6 +65,10 @@ class EditAdaptiveMediaConfig extends PortletBase {
 		}
 
 		if (maxHeightInput) {
+			this.eventHandler_.add(maxHeightInput.addEventListener('keydown', (event) => {
+				this.handleKeyDown_(event);
+			}));
+
 			this.eventHandler_.add(maxHeightInput.addEventListener('input', (event) => {
 				this.validateDimensions_(true);
 			}));
@@ -104,6 +113,19 @@ class EditAdaptiveMediaConfig extends PortletBase {
 		}
 
 		this._originalUuidChanged = true;
+	}
+
+	/**
+	 * Prevents from introducing letters in the input field.
+	 *
+	 * @param {KeyboardEvent} event The keyboard event.
+	 */
+	handleKeyDown_(event) {
+		let code = event.keyCode || event.charCode;
+
+		if (this.validInputKeyCodes_.indexOf(code) == -1) {
+			event.preventDefault();
+		}
 	}
 
 	/**

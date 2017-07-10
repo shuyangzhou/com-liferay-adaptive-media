@@ -23,6 +23,7 @@ import com.liferay.item.selector.ItemSelectorReturnTypeResolver;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.StringPool;
@@ -67,9 +68,17 @@ public class FileEntryAdaptiveMediaImageURLItemSelectorReturnTypeResolver
 
 		fileEntryJSONObject.put("fileEntryId", fileEntry.getFileEntryId());
 
-		String previewURL = DLUtil.getPreviewURL(
-			fileEntry, fileEntry.getFileVersion(), themeDisplay,
-			StringPool.BLANK, false, false);
+		String previewURL = null;
+
+		if (fileEntry.getGroupId() == fileEntry.getRepositoryId()) {
+			previewURL = DLUtil.getPreviewURL(
+				fileEntry, fileEntry.getFileVersion(), themeDisplay,
+				StringPool.BLANK, false, false);
+		}
+		else {
+			previewURL = PortletFileRepositoryUtil.getPortletFileEntryURL(
+				themeDisplay, fileEntry, StringPool.BLANK, false);
+		}
 
 		fileEntryJSONObject.put("defaultSource", previewURL);
 

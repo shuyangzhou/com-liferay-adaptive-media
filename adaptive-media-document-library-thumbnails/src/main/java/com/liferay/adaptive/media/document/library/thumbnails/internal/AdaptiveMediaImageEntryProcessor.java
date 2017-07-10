@@ -29,8 +29,9 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.util.ImageProcessorImpl;
 
 import java.io.ByteArrayInputStream;
@@ -222,10 +223,12 @@ public class AdaptiveMediaImageEntryProcessor
 				fileVersion
 			).with(
 				AdaptiveMediaImageAttribute.IMAGE_WIDTH,
-				PropsValues.DL_FILE_ENTRY_THUMBNAIL_MAX_WIDTH
+				PrefsPropsUtil.getInteger(
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_WIDTH)
 			).with(
 				AdaptiveMediaImageAttribute.IMAGE_HEIGHT,
-				PropsValues.DL_FILE_ENTRY_THUMBNAIL_MAX_HEIGHT
+				PrefsPropsUtil.getInteger(
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_HEIGHT)
 			).done());
 	}
 

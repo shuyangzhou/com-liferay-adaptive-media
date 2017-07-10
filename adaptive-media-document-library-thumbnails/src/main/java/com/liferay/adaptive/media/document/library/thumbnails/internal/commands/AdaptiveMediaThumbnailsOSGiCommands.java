@@ -31,9 +31,10 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.service.CompanyLocalService;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.util.PropsValues;
 
 import java.awt.image.RenderedImage;
 
@@ -241,20 +242,26 @@ public class AdaptiveMediaThumbnailsOSGiCommands {
 	private ThumbnailConfiguration[] _getThumbnailConfigurations() {
 		return new ThumbnailConfiguration[] {
 			new ThumbnailConfiguration(
-				PropsValues.DL_FILE_ENTRY_THUMBNAIL_MAX_WIDTH,
-				PropsValues.DL_FILE_ENTRY_THUMBNAIL_MAX_HEIGHT,
+				PrefsPropsUtil.getInteger(
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_WIDTH),
+				PrefsPropsUtil.getInteger(
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_HEIGHT),
 				Pattern.compile(
 					DLPreviewableProcessor.THUMBNAIL_PATH +
 						"\\d+/\\d+(?:/\\d+)+/(\\d+)(?:\\..+)?$")),
 			new ThumbnailConfiguration(
-				PropsValues.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_WIDTH,
-				PropsValues.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_HEIGHT,
+				PrefsPropsUtil.getInteger(
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_WIDTH),
+				PrefsPropsUtil.getInteger(
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_HEIGHT),
 				Pattern.compile(
 					DLPreviewableProcessor.THUMBNAIL_PATH +
 						"\\d+/\\d+(?:/\\d+)+/(\\d+)-1(?:\\..+)?$")),
 			new ThumbnailConfiguration(
-				PropsValues.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_2_MAX_WIDTH,
-				PropsValues.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_2_MAX_HEIGHT,
+				PrefsPropsUtil.getInteger(
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_2_MAX_WIDTH),
+				PrefsPropsUtil.getInteger(
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_2_MAX_HEIGHT),
 				Pattern.compile(
 					DLPreviewableProcessor.THUMBNAIL_PATH +
 						"\\d+/\\d+(?:/\\d+)+/(\\d+)-2(?:\\..+)?$"))

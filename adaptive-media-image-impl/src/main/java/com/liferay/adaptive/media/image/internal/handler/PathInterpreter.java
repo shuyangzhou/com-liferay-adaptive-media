@@ -74,12 +74,19 @@ public class PathInterpreter {
 					Map<String, String> curProperties =
 						configurationEntry.getProperties();
 
+					AdaptiveMediaAttribute<?, String>
+						configurationUuidAdaptiveMediaAttribute =
+							AdaptiveMediaAttribute.configurationUuid();
+
 					curProperties.put(
-						AdaptiveMediaAttribute.configurationUuid().getName(),
+						configurationUuidAdaptiveMediaAttribute.getName(),
 						configurationEntry.getUUID());
 
 					return curProperties;
-				}).orElse(new HashMap<>());
+				}
+			).orElse(
+				new HashMap<>()
+			);
 
 			return Optional.of(Tuple.of(fileVersion, properties));
 		}

@@ -14,9 +14,10 @@
 
 package com.liferay.adaptive.media.blogs.internal.exportimport.content.processor;
 
-import com.liferay.adaptive.media.blogs.internal.util.CheckedFunction;
+import com.liferay.adaptive.media.image.html.AdaptiveMediaImageHTMLTagFactory;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.exportimport.content.processor.ExportImportContentProcessor;
+import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -24,10 +25,10 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.StagedModel;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 
-import java.util.Arrays;
-import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -61,15 +62,7 @@ public class AdaptiveMediaBlogsEntryExportImportContentProcessor
 			new AdaptiveMediaReferenceExporter(
 				portletDataContext, stagedModel, exportReferencedContent);
 
-		replacedContent = _replace(
-			replacedContent, _DYNAMIC_TAG_REGEXP, referenceExporter,
-			_adaptiveMediaExportImportPlaceholderFactory::
-				createDynamicPlaceholder);
-
-		return _replace(
-			replacedContent, _STATIC_TAG_REGEXP, referenceExporter,
-			_adaptiveMediaExportImportPlaceholderFactory::
-				createStaticPlaceholder);
+		return _replace(replacedContent, referenceExporter);
 	}
 
 	@Override
@@ -86,15 +79,7 @@ public class AdaptiveMediaBlogsEntryExportImportContentProcessor
 			_exportImportContentProcessor.replaceImportContentReferences(
 				portletDataContext, stagedModel, content);
 
-		replacedContent = _replace(
-			replacedContent, _DYNAMIC_PLACEHOLDER_REGEXP,
-			adaptiveMediaEmbeddedReferenceSet,
-			_adaptiveMediaTagFactory::createDynamicTag);
-
-		return _replace(
-			replacedContent, _STATIC_PLACEHOLDER_REGEXP,
-			adaptiveMediaEmbeddedReferenceSet,
-			_adaptiveMediaTagFactory::createStaticTag);
+		return _replace(replacedContent, adaptiveMediaEmbeddedReferenceSet);
 	}
 
 	@Reference(unbind = "-")
@@ -107,19 +92,10 @@ public class AdaptiveMediaBlogsEntryExportImportContentProcessor
 	}
 
 	@Reference(unbind = "-")
-	public void setAdaptiveMediaExportImportPlaceholderFactory(
-		AdaptiveMediaExportImportPlaceholderFactory
-			adaptiveMediaExportImportPlaceholderFactory) {
+	public void setAdaptiveMediaImageHTMLTagFactory(
+		AdaptiveMediaImageHTMLTagFactory adaptiveMediaImageHTMLTagFactory) {
 
-		_adaptiveMediaExportImportPlaceholderFactory =
-			adaptiveMediaExportImportPlaceholderFactory;
-	}
-
-	@Reference(unbind = "-")
-	public void setAdaptiveMediaTagFactory(
-		AdaptiveMediaTagFactory adaptiveMediaTagFactory) {
-
-		_adaptiveMediaTagFactory = adaptiveMediaTagFactory;
+		_adaptiveMediaImageHTMLTagFactory = adaptiveMediaImageHTMLTagFactory;
 	}
 
 	@Reference(unbind = "-")
@@ -144,16 +120,12 @@ public class AdaptiveMediaBlogsEntryExportImportContentProcessor
 		_exportImportContentProcessor.validateContentReferences(
 			groupId, content);
 
-		for (Pattern pattern : Arrays.asList(
-				_DYNAMIC_TAG_REGEXP, _STATIC_TAG_REGEXP)) {
+		Document document = _parseDocument(content);
 
-			Matcher matcher = pattern.matcher(content);
+		for (Element element : document.select("[data-fileEntryId]")) {
+			long fileEntryId = Long.valueOf(element.attr("data-fileEntryId"));
 
-			while (matcher.find()) {
-				long fileEntryId = Long.parseLong(matcher.group(1));
-
-				_dlAppLocalService.getFileEntry(fileEntryId);
-			}
+			_dlAppLocalService.getFileEntry(fileEntryId);
 		}
 	}
 
@@ -170,89 +142,104 @@ public class AdaptiveMediaBlogsEntryExportImportContentProcessor
 		}
 	}
 
+	private Document _parseDocument(String html) {
+		Document.OutputSettings outputSettings = new Document.OutputSettings();
+
+		outputSettings.prettyPrint(false);
+		outputSettings.syntax(Document.OutputSettings.Syntax.xml);
+
+		Document document = Jsoup.parseBodyFragment(html);
+
+		document.outputSettings(outputSettings);
+
+		return document;
+	}
+
+	private Element _parseNode(String tag) {
+		Document document = _parseDocument(tag);
+
+		Element body = document.body();
+
+		return body.child(0);
+	}
+
 	private String _replace(
-			String content, Pattern pattern,
-			AdaptiveMediaEmbeddedReferenceSet adaptiveMediaEmbeddedReferenceSet,
-			CheckedFunction<FileEntry, String, PortalException> tagFactory)
+			String content,
+			AdaptiveMediaEmbeddedReferenceSet adaptiveMediaEmbeddedReferenceSet)
 		throws PortalException {
 
-		StringBuffer sb = new StringBuffer();
+		Document document = _parseDocument(content);
 
-		Matcher matcher = pattern.matcher(content);
+		Elements elements = document.getElementsByAttribute(
+			_EXPORT_IMPORT_PATH_ATTR);
 
-		while (matcher.find()) {
-			String path = matcher.group(1);
+		for (Element element : elements) {
+			String path = element.attr(_EXPORT_IMPORT_PATH_ATTR);
 
-			if (adaptiveMediaEmbeddedReferenceSet.containsReference(path)) {
-				long fileEntryId =
-					adaptiveMediaEmbeddedReferenceSet.importReference(path);
+			if (!adaptiveMediaEmbeddedReferenceSet.containsReference(path)) {
+				continue;
+			}
 
-				FileEntry fileEntry = _getFileEntry(fileEntryId);
+			long fileEntryId =
+				adaptiveMediaEmbeddedReferenceSet.importReference(path);
 
-				if (fileEntry != null) {
-					matcher.appendReplacement(
-						sb,
-						Matcher.quoteReplacement(tagFactory.apply(fileEntry)));
-				}
+			FileEntry fileEntry = _getFileEntry(fileEntryId);
+
+			if (fileEntry == null) {
+				continue;
+			}
+
+			element.attr("data-fileEntryId", String.valueOf(fileEntryId));
+			element.removeAttr(_EXPORT_IMPORT_PATH_ATTR);
+
+			if ("picture".equals(element.tagName())) {
+				Elements imgElements = element.getElementsByTag("img");
+
+				Element img = imgElements.first();
+
+				Element picture = _parseNode(
+					_adaptiveMediaImageHTMLTagFactory.create(
+						img.toString(), fileEntry));
+
+				element.html(picture.html());
 			}
 		}
 
-		matcher.appendTail(sb);
-
-		return sb.toString();
+		return document.body().html();
 	}
 
 	private String _replace(
-			String content, Pattern pattern,
-			AdaptiveMediaReferenceExporter referenceExporter,
-			Function<FileEntry, String> placeholderFactory)
+			String content, AdaptiveMediaReferenceExporter referenceExporter)
 		throws PortalException {
 
-		StringBuffer sb = new StringBuffer();
+		Document document = _parseDocument(content);
 
-		Matcher matcher = pattern.matcher(content);
-
-		while (matcher.find()) {
-			long fileEntryId = Long.parseLong(matcher.group(1));
+		for (Element element : document.select("[data-fileEntryId]")) {
+			long fileEntryId = Long.valueOf(element.attr("data-fileEntryId"));
 
 			FileEntry fileEntry = _dlAppLocalService.getFileEntry(fileEntryId);
 
-			matcher.appendReplacement(
-				sb,
-				Matcher.quoteReplacement(placeholderFactory.apply(fileEntry)));
-
 			referenceExporter.exportReference(fileEntry);
+
+			element.removeAttr("data-fileEntryId");
+			element.attr(
+				_EXPORT_IMPORT_PATH_ATTR,
+				ExportImportPathUtil.getModelPath(fileEntry));
 		}
 
-		matcher.appendTail(sb);
+		Element body = document.body();
 
-		return sb.toString();
+		return body.html();
 	}
 
-	private static final Pattern _DYNAMIC_PLACEHOLDER_REGEXP = Pattern.compile(
-		"\\[\\$adaptive-media-dynamic-media path=\"([^\"]+)\"\\$]",
-		Pattern.CASE_INSENSITIVE);
-
-	private static final Pattern _DYNAMIC_TAG_REGEXP = Pattern.compile(
-		"<img .*?\\s*data-fileEntryId=\"(\\d+)\".*?/>",
-		Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-
-	private static final Pattern _STATIC_PLACEHOLDER_REGEXP = Pattern.compile(
-		"\\[\\$adaptive-media-static-media path=\"([^\"]+)\"\\$]",
-		Pattern.CASE_INSENSITIVE);
-
-	private static final Pattern _STATIC_TAG_REGEXP = Pattern.compile(
-		"<picture data-fileentryid=\"(\\d+)\">(?:\\s*.*?)*?</picture>",
-		Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+	private static final String _EXPORT_IMPORT_PATH_ATTR = "export-import-path";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		AdaptiveMediaBlogsEntryExportImportContentProcessor.class);
 
 	private AdaptiveMediaEmbeddedReferenceSetFactory
 		_adaptiveMediaEmbeddedReferenceSetFactory;
-	private AdaptiveMediaExportImportPlaceholderFactory
-		_adaptiveMediaExportImportPlaceholderFactory;
-	private AdaptiveMediaTagFactory _adaptiveMediaTagFactory;
+	private AdaptiveMediaImageHTMLTagFactory _adaptiveMediaImageHTMLTagFactory;
 	private DLAppLocalService _dlAppLocalService;
 	private ExportImportContentProcessor<String> _exportImportContentProcessor;
 
