@@ -14,12 +14,12 @@
 
 package com.liferay.adaptive.media.image.internal.handler;
 
-import com.liferay.adaptive.media.AdaptiveMediaAttribute;
-import com.liferay.adaptive.media.exception.AdaptiveMediaRuntimeException;
-import com.liferay.adaptive.media.image.configuration.AdaptiveMediaImageConfigurationEntry;
-import com.liferay.adaptive.media.image.configuration.AdaptiveMediaImageConfigurationHelper;
+import com.liferay.adaptive.media.AMAttribute;
+import com.liferay.adaptive.media.exception.AMRuntimeException;
+import com.liferay.adaptive.media.image.configuration.AMImageConfigurationEntry;
+import com.liferay.adaptive.media.image.configuration.AMImageConfigurationHelper;
 import com.liferay.adaptive.media.image.internal.util.Tuple;
-import com.liferay.document.library.kernel.service.DLAppLocalService;
+import com.liferay.document.library.kernel.service.DLAppService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
@@ -55,7 +55,7 @@ public class PathInterpreter {
 
 			long fileEntryId = Long.valueOf(matcher.group(1));
 
-			FileEntry fileEntry = _dlAppLocalService.getFileEntry(fileEntryId);
+			FileEntry fileEntry = _dlAppService.getFileEntry(fileEntryId);
 
 			long fileVersionId = _getFileVersionId(matcher);
 
@@ -63,41 +63,47 @@ public class PathInterpreter {
 
 			String configurationEntryUUID = _getConfigurationEntryUUID(matcher);
 
-			Optional<AdaptiveMediaImageConfigurationEntry>
-				configurationEntryOptional =
-					_configurationHelper.
-						getAdaptiveMediaImageConfigurationEntry(
-							fileVersion.getCompanyId(), configurationEntryUUID);
+			Optional<AMImageConfigurationEntry>
+				amImageConfigurationEntryOptional =
+					_amImageConfigurationHelper.getAMImageConfigurationEntry(
+						fileVersion.getCompanyId(), configurationEntryUUID);
 
-			Map<String, String> properties = configurationEntryOptional.map(
-				configurationEntry -> {
-					Map<String, String> curProperties =
-						configurationEntry.getProperties();
+			Map<String, String> properties =
+				amImageConfigurationEntryOptional.map(
+					amImageConfigurationEntry -> {
+						Map<String, String> curProperties =
+							amImageConfigurationEntry.getProperties();
 
-					curProperties.put(
-						AdaptiveMediaAttribute.configurationUuid().getName(),
-						configurationEntry.getUUID());
+						AMAttribute<?, String> configurationUuidAMAttribute =
+							AMAttribute.getConfigurationUuidAMAttribute();
 
-					return curProperties;
-				}).orElse(new HashMap<>());
+						curProperties.put(
+							configurationUuidAMAttribute.getName(),
+							amImageConfigurationEntry.getUUID());
+
+						return curProperties;
+					}
+				).orElse(
+					new HashMap<>()
+				);
 
 			return Optional.of(Tuple.of(fileVersion, properties));
 		}
 		catch (PortalException pe) {
-			throw new AdaptiveMediaRuntimeException(pe);
+			throw new AMRuntimeException(pe);
 		}
 	}
 
 	@Reference(unbind = "-")
-	public void setAdaptiveMediaImageConfigurationHelper(
-		AdaptiveMediaImageConfigurationHelper configurationHelper) {
+	public void setAMImageConfigurationHelper(
+		AMImageConfigurationHelper amImageConfigurationHelper) {
 
-		_configurationHelper = configurationHelper;
+		_amImageConfigurationHelper = amImageConfigurationHelper;
 	}
 
 	@Reference(unbind = "-")
-	public void setDLAppLocalService(DLAppLocalService dlAppLocalService) {
-		_dlAppLocalService = dlAppLocalService;
+	public void setDLAppService(DLAppService dlAppService) {
+		_dlAppService = dlAppService;
 	}
 
 	private String _getConfigurationEntryUUID(Matcher matcher) {
@@ -111,7 +117,7 @@ public class PathInterpreter {
 			return fileEntry.getFileVersion();
 		}
 
-		return _dlAppLocalService.getFileVersion(fileVersionId);
+		return _dlAppService.getFileVersion(fileVersionId);
 	}
 
 	private long _getFileVersionId(Matcher matcher) {
@@ -125,7 +131,7 @@ public class PathInterpreter {
 	private static final Pattern _URL_PATTERN = Pattern.compile(
 		"/image/(\\d+)(?:/(\\d+))?/([^/]+)/(?:[^/]+)");
 
-	private AdaptiveMediaImageConfigurationHelper _configurationHelper;
-	private DLAppLocalService _dlAppLocalService;
+	private AMImageConfigurationHelper _amImageConfigurationHelper;
+	private DLAppService _dlAppService;
 
 }

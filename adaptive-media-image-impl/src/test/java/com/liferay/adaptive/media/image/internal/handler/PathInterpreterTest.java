@@ -14,12 +14,12 @@
 
 package com.liferay.adaptive.media.image.internal.handler;
 
-import com.liferay.adaptive.media.exception.AdaptiveMediaRuntimeException;
-import com.liferay.adaptive.media.image.configuration.AdaptiveMediaImageConfigurationEntry;
-import com.liferay.adaptive.media.image.configuration.AdaptiveMediaImageConfigurationHelper;
-import com.liferay.adaptive.media.image.internal.configuration.AdaptiveMediaImageConfigurationHelperImpl;
+import com.liferay.adaptive.media.exception.AMRuntimeException;
+import com.liferay.adaptive.media.image.configuration.AMImageConfigurationEntry;
+import com.liferay.adaptive.media.image.configuration.AMImageConfigurationHelper;
+import com.liferay.adaptive.media.image.internal.configuration.AMImageConfigurationHelperImpl;
 import com.liferay.adaptive.media.image.internal.util.Tuple;
-import com.liferay.document.library.kernel.service.DLAppLocalService;
+import com.liferay.document.library.kernel.service.DLAppService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
@@ -41,15 +41,15 @@ public class PathInterpreterTest {
 
 	@Before
 	public void setUp() {
-		_pathInterpreter.setDLAppLocalService(_dlAppLocalService);
-		_pathInterpreter.setAdaptiveMediaImageConfigurationHelper(
-			_adaptiveMediaImageConfigurationHelper);
+		_pathInterpreter.setDLAppService(_dlAppService);
+		_pathInterpreter.setAMImageConfigurationHelper(
+			_amImageConfigurationHelper);
 	}
 
 	@Test
 	public void testFileEntryPath() throws Exception {
 		Mockito.when(
-			_dlAppLocalService.getFileEntry(Mockito.anyLong())
+			_dlAppService.getFileEntry(Mockito.anyLong())
 		).thenReturn(
 			_fileEntry
 		);
@@ -61,25 +61,37 @@ public class PathInterpreterTest {
 		);
 
 		Mockito.when(
-			_adaptiveMediaImageConfigurationHelper.
-				getAdaptiveMediaImageConfigurationEntry(
-					Mockito.anyLong(), Mockito.eq("x"))
+			_amImageConfigurationHelper.getAMImageConfigurationEntry(
+				Mockito.anyLong(), Mockito.eq("x"))
 		).thenReturn(
-			Optional.of(_configurationEntry)
+			Optional.of(_amImageConfigurationEntry)
 		);
 
 		_pathInterpreter.interpretPath("/image/0/x/foo.jpg");
 
-		Mockito.verify(_dlAppLocalService).getFileEntry(0);
-		Mockito.verify(_fileVersion).getCompanyId();
-		Mockito.verify(_configurationEntry).getProperties();
-		Mockito.verify(_configurationEntry).getUUID();
+		Mockito.verify(
+			_dlAppService
+		).getFileEntry(
+			0
+		);
+
+		Mockito.verify(
+			_fileVersion
+		).getCompanyId();
+
+		Mockito.verify(
+			_amImageConfigurationEntry
+		).getProperties();
+
+		Mockito.verify(
+			_amImageConfigurationEntry
+		).getUUID();
 	}
 
-	@Test(expected = AdaptiveMediaRuntimeException.class)
+	@Test(expected = AMRuntimeException.class)
 	public void testFileEntryPathDLAppFailure() throws Exception {
 		Mockito.when(
-			_dlAppLocalService.getFileEntry(0)
+			_dlAppService.getFileEntry(0)
 		).thenThrow(
 			PortalException.class
 		);
@@ -87,10 +99,10 @@ public class PathInterpreterTest {
 		_pathInterpreter.interpretPath("/image/0/x/foo.jpg");
 	}
 
-	@Test(expected = AdaptiveMediaRuntimeException.class)
+	@Test(expected = AMRuntimeException.class)
 	public void testFileEntryPathGetFileVersionFailure() throws Exception {
 		Mockito.when(
-			_dlAppLocalService.getFileEntry(0)
+			_dlAppService.getFileEntry(0)
 		).thenReturn(
 			_fileEntry
 		);
@@ -107,32 +119,49 @@ public class PathInterpreterTest {
 	@Test
 	public void testFileVersionPath() throws Exception {
 		Mockito.when(
-			_dlAppLocalService.getFileVersion(1)
+			_dlAppService.getFileVersion(1)
 		).thenReturn(
 			_fileVersion
 		);
 
 		Mockito.when(
-			_adaptiveMediaImageConfigurationHelper.
-				getAdaptiveMediaImageConfigurationEntry(
-					Mockito.anyLong(), Mockito.eq("x"))
+			_amImageConfigurationHelper.getAMImageConfigurationEntry(
+				Mockito.anyLong(), Mockito.eq("x"))
 		).thenReturn(
-			Optional.of(_configurationEntry)
+			Optional.of(_amImageConfigurationEntry)
 		);
 
 		_pathInterpreter.interpretPath("/image/0/1/x/foo.jpg");
 
-		Mockito.verify(_dlAppLocalService).getFileEntry(0);
-		Mockito.verify(_dlAppLocalService).getFileVersion(1);
-		Mockito.verify(_fileVersion).getCompanyId();
-		Mockito.verify(_configurationEntry).getProperties();
-		Mockito.verify(_configurationEntry).getUUID();
+		Mockito.verify(
+			_dlAppService
+		).getFileEntry(
+			0
+		);
+
+		Mockito.verify(
+			_dlAppService
+		).getFileVersion(
+			1
+		);
+
+		Mockito.verify(
+			_fileVersion
+		).getCompanyId();
+
+		Mockito.verify(
+			_amImageConfigurationEntry
+		).getProperties();
+
+		Mockito.verify(
+			_amImageConfigurationEntry
+		).getUUID();
 	}
 
-	@Test(expected = AdaptiveMediaRuntimeException.class)
+	@Test(expected = AMRuntimeException.class)
 	public void testFileVersionPathDLAppFailure() throws Exception {
 		Mockito.when(
-			_dlAppLocalService.getFileVersion(1)
+			_dlAppService.getFileVersion(1)
 		).thenThrow(
 			PortalException.class
 		);
@@ -153,13 +182,11 @@ public class PathInterpreterTest {
 		_pathInterpreter.interpretPath(null);
 	}
 
-	private final AdaptiveMediaImageConfigurationHelper
-		_adaptiveMediaImageConfigurationHelper = Mockito.mock(
-			AdaptiveMediaImageConfigurationHelperImpl.class);
-	private final AdaptiveMediaImageConfigurationEntry _configurationEntry =
-		Mockito.mock(AdaptiveMediaImageConfigurationEntry.class);
-	private final DLAppLocalService _dlAppLocalService = Mockito.mock(
-		DLAppLocalService.class);
+	private final AMImageConfigurationEntry _amImageConfigurationEntry =
+		Mockito.mock(AMImageConfigurationEntry.class);
+	private final AMImageConfigurationHelper _amImageConfigurationHelper =
+		Mockito.mock(AMImageConfigurationHelperImpl.class);
+	private final DLAppService _dlAppService = Mockito.mock(DLAppService.class);
 	private final FileEntry _fileEntry = Mockito.mock(FileEntry.class);
 	private final FileVersion _fileVersion = Mockito.mock(FileVersion.class);
 	private final PathInterpreter _pathInterpreter = new PathInterpreter();

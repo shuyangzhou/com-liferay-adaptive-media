@@ -11,4 +11,6 @@ dependencies {
 	provided project(":apps:adaptive-media:adaptive-media-image-impl")
 }
 
-deploy.enabled = false
+deploy {
+	enabled = false
+}

@@ -15,6 +15,11 @@
 package com.liferay.adaptive.media.content.transformer;
 
 /**
+ * Provides a marker interface to specify the content type that can be managed
+ * by {@link ContentTransformer} implementations. See {@link
+ * com.liferay.adaptive.media.content.transformer.constants.ContentTransformerContentTypes}
+ * for examples.
+ *
  * @author Alejandro Tardín
  */
 public interface ContentTransformerContentType<T> {

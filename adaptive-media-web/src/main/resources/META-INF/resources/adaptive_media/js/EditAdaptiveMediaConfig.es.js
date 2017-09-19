@@ -1,4 +1,5 @@
 import core from 'metal';
+import Alert from 'metal-alert';
 import dom from 'metal-dom';
 import { EventHandler } from 'metal-events';
 
@@ -17,6 +18,7 @@ class EditAdaptiveMediaConfig extends PortletBase {
 	 */
 	created() {
 		this.eventHandler_ = new EventHandler();
+		this.validInputKeyCodes_ = [8, 9, 13, 38, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
 	}
 
 	/**
@@ -50,21 +52,21 @@ class EditAdaptiveMediaConfig extends PortletBase {
 		let maxHeightInput = this.one('#maxHeight');
 
 		if (maxWidthInput) {
-			this.eventHandler_.add(maxWidthInput.addEventListener('input', (event) => {
-				this.validateDimensions_(true);
+			this.eventHandler_.add(maxWidthInput.addEventListener('keydown', (event) => {
+				this.handleKeyDown_(event);
 			}));
 
-			this.eventHandler_.add(maxWidthInput.addEventListener('blur', (event) => {
+			this.eventHandler_.add(maxWidthInput.addEventListener('input', (event) => {
 				this.validateDimensions_(true);
 			}));
 		}
 
 		if (maxHeightInput) {
-			this.eventHandler_.add(maxHeightInput.addEventListener('input', (event) => {
-				this.validateDimensions_(true);
+			this.eventHandler_.add(maxHeightInput.addEventListener('keydown', (event) => {
+				this.handleKeyDown_(event);
 			}));
 
-			this.eventHandler_.add(maxHeightInput.addEventListener('blur', (event) => {
+			this.eventHandler_.add(maxHeightInput.addEventListener('input', (event) => {
 				this.validateDimensions_(true);
 			}));
 		}
@@ -73,13 +75,13 @@ class EditAdaptiveMediaConfig extends PortletBase {
 
 		this.maxHeightInput = maxHeightInput;
 
-		Liferay.on('form:registered', (event) => {
-			if (event.formName === this.ns('fm')) {
-				this.validateDimensions_(false);
-			}
-		});
-
 		this.newUuidInput = this.one('#newUuid');
+
+		let saveButton = this.one('button[type=submit]');
+
+		this.eventHandler_.add(saveButton.addEventListener('click', (event) => {
+			this.onSubmitForm_(event);
+		}));
 	}
 
 	/**
@@ -104,6 +106,19 @@ class EditAdaptiveMediaConfig extends PortletBase {
 		}
 
 		this._originalUuidChanged = true;
+	}
+
+	/**
+	 * Prevents from introducing letters in the input field.
+	 *
+	 * @param {KeyboardEvent} event The keyboard event.
+	 */
+	handleKeyDown_(event) {
+		let code = event.keyCode || event.charCode;
+
+		if (this.validInputKeyCodes_.indexOf(code) == -1) {
+			event.preventDefault();
+		}
 	}
 
 	/**
@@ -138,6 +153,29 @@ class EditAdaptiveMediaConfig extends PortletBase {
 	}
 
 	/**
+	 * Checks if there are form errors before
+	 * submitting the AMI.
+	 *
+	 * @param {Event} event The event that
+	 * triggered the submit action.
+	 * @protected
+	 */
+	onSubmitForm_(event) {
+		this.validateDimensions_(false);
+
+		let form = Liferay.Form.get(this.ns('fm'));
+
+		form.formValidator.validate();
+
+		if (form.formValidator.hasErrors()) {
+			event.preventDefault();
+		}
+		else {
+			submitForm(form.form);
+		}
+	}
+
+	/**
 	 * Checks if max-widht or max-height has a value.
 	 *
 	 * @param  {Boolean} validateFields whether the dimensions values
@@ -151,19 +189,41 @@ class EditAdaptiveMediaConfig extends PortletBase {
 		let nsMaxWidth = this.ns('maxWidth');
 		let nsMaxHeight = this.ns('maxHeight');
 
+		let inputErrorMessage = Liferay.Language.get('at-least-one-value-is-required');
+		let STR_BLANK = ' ';
+
 		if (this.maxWidthInput.value || this.maxHeightInput.value) {
 			form.removeRule(nsMaxWidth, 'required');
 			form.removeRule(nsMaxHeight, 'required');
 		}
 		else {
-			form.addRule(nsMaxWidth, 'required');
-			form.addRule(nsMaxHeight, 'required');
+			form.addRule(nsMaxWidth, 'required', inputErrorMessage);
+			form.addRule(nsMaxHeight, 'required', STR_BLANK);
 
 			if (validateFields) {
 				form.formValidator.validateField(nsMaxWidth);
 				form.formValidator.validateField(nsMaxHeight);
 			}
 		}
+	}
+}
+
+/**
+ * EditAdaptiveMediaConfig State definition.
+ * @ignore
+ * @static
+ * @type {!Object}
+ */
+EditAdaptiveMediaConfig.STATE = {
+	/**
+	 * Node where errors will be rendered.
+	 * @instance
+	 * @memberof EditAdaptiveMediaConfig
+	 * @type {String}
+	 */
+	errorNode: {
+		validator: core.isString,
+		value: '.error-wrapper'
 	}
 }
 
