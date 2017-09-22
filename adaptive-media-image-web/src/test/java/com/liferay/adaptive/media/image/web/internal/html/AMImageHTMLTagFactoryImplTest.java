@@ -63,7 +63,7 @@ public class AMImageHTMLTagFactoryImplTest {
 
 		expectedSB.append("<picture data-fileEntryId=\"1234\">");
 		expectedSB.append("<source media=\"(max-width:1989px)\" ");
-		expectedSB.append("srcset=\"adaptiveURL\"/>");
+		expectedSB.append("srcset=\"adaptiveURL\" />");
 		expectedSB.append("<img src=\"originalURL\"/>");
 		expectedSB.append("</picture>");
 
@@ -88,9 +88,9 @@ public class AMImageHTMLTagFactoryImplTest {
 
 		expectedSB.append("<picture data-fileEntryId=\"1234\">");
 		expectedSB.append("<source media=\"(max-width:1986px)\" ");
-		expectedSB.append("srcset=\"adaptiveURL1\"/>");
+		expectedSB.append("srcset=\"adaptiveURL1\" />");
 		expectedSB.append("<source media=\"(max-width:1989px)\" ");
-		expectedSB.append("srcset=\"adaptiveURL2\"/>");
+		expectedSB.append("srcset=\"adaptiveURL2\" />");
 		expectedSB.append("<img src=\"originalURL\"/>");
 		expectedSB.append("</picture>");
 
@@ -150,7 +150,7 @@ public class AMImageHTMLTagFactoryImplTest {
 
 		expectedSB.append("<picture data-fileEntryId=\"1234\">");
 		expectedSB.append("<source media=\"(max-width:1989px)\" ");
-		expectedSB.append("srcset=\"adaptiveURL\"/>");
+		expectedSB.append("srcset=\"adaptiveURL\" />");
 		expectedSB.append("<img \nsrc=\"adaptable\"/>");
 		expectedSB.append("</picture>");
 
@@ -171,7 +171,7 @@ public class AMImageHTMLTagFactoryImplTest {
 
 		expectedSB.append("<picture data-fileEntryId=\"1234\">");
 		expectedSB.append("<source media=\"(max-width:1989px)\" ");
-		expectedSB.append("srcset=\"adaptiveURL\"/>");
+		expectedSB.append("srcset=\"adaptiveURL\" />");
 		expectedSB.append("<img src=\"originalURL\"/>");
 		expectedSB.append("</picture>");
 
