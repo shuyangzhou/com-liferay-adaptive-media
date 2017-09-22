@@ -165,6 +165,8 @@ public class AMImageHTMLExportImportContentProcessor
 
 				Element imgElement = imgElements.first();
 
+				imgElement.removeAttr(_ATTRIBUTE_NAME_EXPORT_IMPORT_PATH);
+
 				Element picture = _parseNode(
 					_amImageHTMLTagFactory.create(
 						imgElement.toString(), fileEntry));
