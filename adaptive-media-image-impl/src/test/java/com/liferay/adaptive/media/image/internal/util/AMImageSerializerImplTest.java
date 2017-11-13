@@ -22,11 +22,11 @@ import com.liferay.adaptive.media.image.internal.processor.AMImage;
 import com.liferay.adaptive.media.image.processor.AMImageAttribute;
 import com.liferay.adaptive.media.image.processor.AMImageProcessor;
 import com.liferay.adaptive.media.image.util.AMImageSerializer;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 
 import java.io.InputStream;
 
@@ -93,7 +93,7 @@ public class AMImageSerializerImplTest {
 
 	@Test(expected = AMRuntimeException.class)
 	public void testDeserializeInvalidString() throws Exception {
-		String invalidString = StringUtil.randomString();
+		String invalidString = RandomTestUtil.randomString();
 
 		AMImageSerializer amImageSerializer = new AMImageSerializerImpl();
 

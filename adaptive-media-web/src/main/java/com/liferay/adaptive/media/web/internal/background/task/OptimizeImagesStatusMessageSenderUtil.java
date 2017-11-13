@@ -51,11 +51,11 @@ public class OptimizeImagesStatusMessageSenderUtil {
 			BackgroundTaskThreadLocal.getBackgroundTaskId());
 		message.put(
 			AMOptimizeImagesBackgroundTaskConstants.COMPANY_ID, companyId);
-		message.put(AMOptimizeImagesBackgroundTaskConstants.PHASE, phase);
-		message.put("status", BackgroundTaskConstants.STATUS_IN_PROGRESS);
 		message.put(
 			AMOptimizeImagesBackgroundTaskConstants.CONFIGURATION_ENTRY_UUID,
 			configurationEntryUuid);
+		message.put(AMOptimizeImagesBackgroundTaskConstants.PHASE, phase);
+		message.put("status", BackgroundTaskConstants.STATUS_IN_PROGRESS);
 
 		_backgroundTaskStatusMessageSender.sendBackgroundTaskStatusMessage(
 			message);

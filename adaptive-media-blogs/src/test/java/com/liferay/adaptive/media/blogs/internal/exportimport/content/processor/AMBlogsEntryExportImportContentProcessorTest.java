@@ -19,7 +19,6 @@ import com.liferay.exportimport.content.processor.ExportImportContentProcessor;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,8 +45,8 @@ public class AMBlogsEntryExportImportContentProcessorTest {
 	public void testExportCallsBothExportImportContentProcessors()
 		throws Exception {
 
-		String originalContent = StringUtil.randomString();
-		String blogsEntryReplacedContent = StringUtil.randomString();
+		String originalContent = RandomTestUtil.randomString();
+		String blogsEntryReplacedContent = RandomTestUtil.randomString();
 
 		Mockito.doReturn(
 			blogsEntryReplacedContent
@@ -57,7 +56,7 @@ public class AMBlogsEntryExportImportContentProcessorTest {
 			_portletDataContext, _blogsEntry, originalContent, false, false
 		);
 
-		String adaptiveMediaReplacedContent = StringUtil.randomString();
+		String adaptiveMediaReplacedContent = RandomTestUtil.randomString();
 
 		Mockito.doReturn(
 			adaptiveMediaReplacedContent
@@ -80,9 +79,9 @@ public class AMBlogsEntryExportImportContentProcessorTest {
 	public void testImportCallsBothExportImportContentProcessors()
 		throws Exception {
 
-		String originalContent = StringUtil.randomString();
+		String originalContent = RandomTestUtil.randomString();
 
-		String blogsEntryReplacedContent = StringUtil.randomString();
+		String blogsEntryReplacedContent = RandomTestUtil.randomString();
 
 		Mockito.doReturn(
 			blogsEntryReplacedContent
@@ -92,7 +91,7 @@ public class AMBlogsEntryExportImportContentProcessorTest {
 			_portletDataContext, _blogsEntry, originalContent
 		);
 
-		String adaptiveMediaReplacedContent = StringUtil.randomString();
+		String adaptiveMediaReplacedContent = RandomTestUtil.randomString();
 
 		Mockito.doReturn(
 			adaptiveMediaReplacedContent
@@ -113,7 +112,7 @@ public class AMBlogsEntryExportImportContentProcessorTest {
 	public void testValidateContentFailsWhenBlogsEntryExportImportContentProcessorProcessorFails()
 		throws Exception {
 
-		String content = StringUtil.randomString();
+		String content = RandomTestUtil.randomString();
 
 		Mockito.doThrow(
 			PortalException.class
@@ -131,7 +130,7 @@ public class AMBlogsEntryExportImportContentProcessorTest {
 	public void testValidateContentFailsWhenHTMLExportImportContentProcessorFails()
 		throws Exception {
 
-		String content = StringUtil.randomString();
+		String content = RandomTestUtil.randomString();
 
 		Mockito.doThrow(
 			PortalException.class
@@ -150,7 +149,7 @@ public class AMBlogsEntryExportImportContentProcessorTest {
 		throws Exception {
 
 		_amBlogsEntryExportImportContentProcessor.validateContentReferences(
-			RandomTestUtil.randomLong(), StringUtil.randomString());
+			RandomTestUtil.randomLong(), RandomTestUtil.randomString());
 	}
 
 	private final AMBlogsEntryExportImportContentProcessor

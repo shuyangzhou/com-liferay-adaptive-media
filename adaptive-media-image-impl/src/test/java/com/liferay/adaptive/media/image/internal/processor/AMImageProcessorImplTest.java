@@ -27,7 +27,7 @@ import com.liferay.portal.kernel.image.ImageTool;
 import com.liferay.portal.kernel.image.ImageToolUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
-import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 
 import java.awt.image.RenderedImage;
 
@@ -147,8 +147,8 @@ public class AMImageProcessorImplTest {
 		).thenReturn(
 			Optional.of(
 				new AMImageConfigurationEntryImpl(
-					StringUtil.randomString(), StringUtil.randomString(),
-					Collections.emptyMap()))
+					RandomTestUtil.randomString(),
+					RandomTestUtil.randomString(), Collections.emptyMap()))
 		);
 
 		Mockito.when(
@@ -170,7 +170,8 @@ public class AMImageProcessorImplTest {
 			false
 		);
 
-		_amImageProcessorImpl.process(_fileVersion, StringUtil.randomString());
+		_amImageProcessorImpl.process(
+			_fileVersion, RandomTestUtil.randomString());
 
 		Mockito.verify(
 			_imageProcessor, Mockito.never()
@@ -196,8 +197,8 @@ public class AMImageProcessorImplTest {
 		).thenReturn(
 			Optional.of(
 				new AMImageConfigurationEntryImpl(
-					StringUtil.randomString(), StringUtil.randomString(),
-					Collections.emptyMap()))
+					RandomTestUtil.randomString(),
+					RandomTestUtil.randomString(), Collections.emptyMap()))
 		);
 
 		Mockito.when(
@@ -227,7 +228,8 @@ public class AMImageProcessorImplTest {
 			Mockito.mock(RenderedImage.class)
 		);
 
-		_amImageProcessorImpl.process(_fileVersion, StringUtil.randomString());
+		_amImageProcessorImpl.process(
+			_fileVersion, RandomTestUtil.randomString());
 
 		Mockito.verify(
 			_amImageEntryLocalService
@@ -260,7 +262,8 @@ public class AMImageProcessorImplTest {
 			Optional.empty()
 		);
 
-		_amImageProcessorImpl.process(_fileVersion, StringUtil.randomString());
+		_amImageProcessorImpl.process(
+			_fileVersion, RandomTestUtil.randomString());
 
 		Mockito.verify(
 			_amImageEntryLocalService, Mockito.never()
@@ -277,7 +280,8 @@ public class AMImageProcessorImplTest {
 			false
 		);
 
-		_amImageProcessorImpl.process(_fileVersion, StringUtil.randomString());
+		_amImageProcessorImpl.process(
+			_fileVersion, RandomTestUtil.randomString());
 
 		Mockito.verify(
 			_amImageConfigurationHelper, Mockito.never()
@@ -298,7 +302,7 @@ public class AMImageProcessorImplTest {
 
 		AMImageConfigurationEntry amImageConfigurationEntry =
 			new AMImageConfigurationEntryImpl(
-				StringUtil.randomString(), StringUtil.randomString(),
+				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 				Collections.emptyMap());
 
 		Mockito.when(
@@ -346,7 +350,7 @@ public class AMImageProcessorImplTest {
 
 		AMImageConfigurationEntry amImageConfigurationEntry =
 			new AMImageConfigurationEntryImpl(
-				StringUtil.randomString(), StringUtil.randomString(),
+				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 				Collections.emptyMap());
 
 		Mockito.when(
@@ -417,7 +421,7 @@ public class AMImageProcessorImplTest {
 
 		AMImageConfigurationEntry amImageConfigurationEntry =
 			new AMImageConfigurationEntryImpl(
-				StringUtil.randomString(), StringUtil.randomString(),
+				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 				Collections.emptyMap());
 
 		Mockito.when(
@@ -455,7 +459,7 @@ public class AMImageProcessorImplTest {
 
 		AMImageConfigurationEntry amImageConfigurationEntry =
 			new AMImageConfigurationEntryImpl(
-				StringUtil.randomString(), StringUtil.randomString(),
+				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 				Collections.emptyMap());
 
 		Mockito.when(

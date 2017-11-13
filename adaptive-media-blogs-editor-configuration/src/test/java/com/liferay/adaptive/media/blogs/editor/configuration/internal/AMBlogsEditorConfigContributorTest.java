@@ -24,13 +24,13 @@ import com.liferay.item.selector.criteria.audio.criterion.AudioItemSelectorCrite
 import com.liferay.item.selector.criteria.file.criterion.FileItemSelectorCriterion;
 import com.liferay.item.selector.criteria.image.criterion.ImageItemSelectorCriterion;
 import com.liferay.item.selector.criteria.upload.criterion.UploadItemSelectorCriterion;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactory;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -226,7 +226,7 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		jsonObject.put(
-			"filebrowserImageBrowseLinkUrl", StringUtil.randomString());
+			"filebrowserImageBrowseLinkUrl", RandomTestUtil.randomString());
 
 		when(
 			_itemSelector.getItemSelectorCriteria(Mockito.anyString())
@@ -237,7 +237,7 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 		when(
 			_itemSelector.getItemSelectedEventName(Mockito.anyString())
 		).thenReturn(
-			StringUtil.randomString()
+			RandomTestUtil.randomString()
 		);
 
 		when(
@@ -251,7 +251,7 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 		when(
 			_portletURL.toString()
 		).thenReturn(
-			StringUtil.randomString()
+			RandomTestUtil.randomString()
 		);
 
 		AMBlogsEditorConfigContributor amBlogsEditorConfigContributor =
