@@ -31,7 +31,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 )
 public interface AMImageCompanyConfiguration {
 
-	@Meta.AD(required = false)
+	@Meta.AD(required = false, name = "image-variants")
 	public String[] imageVariants();
 
 }
