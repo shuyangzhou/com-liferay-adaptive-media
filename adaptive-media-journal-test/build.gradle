@@ -6,7 +6,7 @@ dependencies {
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.dynamic.data.mapping.api", version: "3.1.0"
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.dynamic.data.mapping.test.util", version: "2.1.0"
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.exportimport.api", version: "2.1.0"
-	testIntegrationCompile group: "com.liferay", name: "com.liferay.exportimport.test.util", version: "1.0.0-20170905.203728-2"
+	testIntegrationCompile group: "com.liferay", name: "com.liferay.exportimport.test.util", version: "1.0.0-20171204.194633-4"
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.journal.api", version: "2.0.0"
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.registry.api", version: "1.0.0"
 	testIntegrationCompile group: "com.liferay.arquillian", name: "com.liferay.arquillian.docker.extension", version: "0.0.1-20170927.134515-3"
