@@ -66,7 +66,7 @@ public class HtmlContentTransformerImplTest {
 			"<whatever></whatever>"
 		);
 
-		StringBundler expectedSB = new StringBundler(5);
+		StringBundler expectedSB = new StringBundler(3);
 
 		expectedSB.append("<div><div>");
 		expectedSB.append("<whatever></whatever>");
@@ -200,7 +200,7 @@ public class HtmlContentTransformerImplTest {
 			"<whatever></whatever>"
 		);
 
-		StringBundler expectedSB = new StringBundler(5);
+		StringBundler expectedSB = new StringBundler(1);
 
 		expectedSB.append("<div><div><whatever></whatever></div></div><br/>");
 
