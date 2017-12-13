@@ -3,6 +3,7 @@ targetCompatibility = "1.8"
 
 dependencies {
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.arquillian.extension.junit.bridge", version: "1.0.7"
+	testIntegrationCompile group: "com.liferay", name: "com.liferay.asset.test.util", version: "1.0.0-20170905.203607-1"
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.blogs.api", version: "3.1.0-20171106.223218-3"
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.exportimport.api", version: "2.1.0"
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.exportimport.test.util", version: "1.0.0-20171204.194633-4"
@@ -19,4 +20,9 @@ dependencies {
 
 deploy {
 	enabled = false
+}
+
+deployDependencies {
+	from configurations.testIntegrationCompile
+	include "*test.util*"
 }
