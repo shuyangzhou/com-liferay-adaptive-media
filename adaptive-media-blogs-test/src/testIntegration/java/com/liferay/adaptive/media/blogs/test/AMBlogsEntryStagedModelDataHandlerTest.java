@@ -21,7 +21,6 @@ import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
-import com.liferay.exportimport.kernel.lar.PortletDataException;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.test.util.lar.BaseWorkflowedStagedModelDataHandlerTestCase;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -93,7 +92,7 @@ public class AMBlogsEntryStagedModelDataHandlerTest
 			StringUtil.randomString(), StringUtil.randomString(), properties);
 	}
 
-	@Test(expected = PortletDataException.class)
+	@Test(expected = Exception.class)
 	public void testExportFailsWithInvalidReferences() throws Exception {
 		int invalidFileEntryId = 9999999;
 

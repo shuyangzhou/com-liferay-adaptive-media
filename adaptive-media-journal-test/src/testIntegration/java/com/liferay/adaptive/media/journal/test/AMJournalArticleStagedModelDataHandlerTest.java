@@ -121,7 +121,7 @@ public class AMJournalArticleStagedModelDataHandlerTest
 		super.tearDown();
 	}
 
-	@Test(expected = PortalException.class)
+	@Test(expected = Exception.class)
 	public void testExportFailsWithInvalidReferences() throws Exception {
 		int invalidFileEntryId = 9999999;
 
