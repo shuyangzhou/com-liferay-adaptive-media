@@ -167,7 +167,7 @@ public class AMImageDLPluggableContentDataHandler
 				).done());
 		}
 		catch (PortalException pe) {
-			StringBundler sb = new StringBundler();
+			StringBundler sb = new StringBundler(4);
 
 			sb.append("Unable to find adaptive media for file version ");
 			sb.append(fileVersion.getFileVersionId());

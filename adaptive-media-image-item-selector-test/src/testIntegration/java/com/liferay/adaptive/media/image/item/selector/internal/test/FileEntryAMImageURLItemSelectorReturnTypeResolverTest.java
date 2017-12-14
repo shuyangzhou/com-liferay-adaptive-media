@@ -600,7 +600,7 @@ public class FileEntryAMImageURLItemSelectorReturnTypeResolverTest {
 
 		String srcSource = sourceJSONObject.getString("src");
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(14);
 
 		sb.append("/o/adaptive-media/image/");
 		sb.append(fileEntryId);

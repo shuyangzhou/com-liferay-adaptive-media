@@ -82,7 +82,7 @@ public class AMImageConfigurationEntryParser {
 	public String getConfigurationString(
 		AMImageConfigurationEntry amImageConfigurationEntry) {
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(14);
 
 		sb.append(_http.encodeURL(amImageConfigurationEntry.getName()));
 		sb.append(StringPool.COLON);
