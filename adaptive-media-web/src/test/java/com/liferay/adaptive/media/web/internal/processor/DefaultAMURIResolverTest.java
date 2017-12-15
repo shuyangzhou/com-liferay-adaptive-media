@@ -60,9 +60,11 @@ public class DefaultAMURIResolverTest {
 
 		String uriString = uri.toString();
 
-		Assert.assertTrue(uriString.contains(pathModule));
-		Assert.assertTrue(uriString.contains(AMWebConstants.SERVLET_PATH));
-		Assert.assertTrue(uriString.contains(relativeURI.toString()));
+		Assert.assertTrue(uriString, uriString.contains(pathModule));
+		Assert.assertTrue(
+			uriString, uriString.contains(AMWebConstants.SERVLET_PATH));
+		Assert.assertTrue(
+			uriString, uriString.contains(relativeURI.toString()));
 	}
 
 	@Test
@@ -82,9 +84,11 @@ public class DefaultAMURIResolverTest {
 
 		String uriString = uri.toString();
 
-		Assert.assertTrue(uriString.contains(pathModule));
-		Assert.assertTrue(uriString.contains(AMWebConstants.SERVLET_PATH));
-		Assert.assertTrue(uriString.contains(relativeURI.toString()));
+		Assert.assertTrue(uriString, uriString.contains(pathModule));
+		Assert.assertTrue(
+			uriString, uriString.contains(AMWebConstants.SERVLET_PATH));
+		Assert.assertTrue(
+			uriString, uriString.contains(relativeURI.toString()));
 	}
 
 	private final AMURIResolver _amURIResolver = new DefaultAMURIResolver();
