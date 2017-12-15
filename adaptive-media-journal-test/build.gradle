@@ -5,7 +5,6 @@ dependencies {
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.arquillian.extension.junit.bridge", version: "1.0.7"
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.asset.test.util", version: "1.0.0-20170905.203607-1"
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.dynamic.data.mapping.api", version: "3.1.0"
-	testIntegrationCompile group: "com.liferay", name: "com.liferay.dynamic.data.mapping.test.util", version: "2.1.0"
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.exportimport.api", version: "2.1.0"
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.exportimport.test.util", version: "1.0.0-20171204.194633-4"
 	testIntegrationCompile group: "com.liferay", name: "com.liferay.journal.api", version: "2.0.0"

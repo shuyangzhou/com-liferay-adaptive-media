@@ -19,11 +19,9 @@ import com.liferay.adaptive.media.image.html.AMImageHTMLTagFactory;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
-import com.liferay.dynamic.data.mapping.model.DDMForm;
-import com.liferay.dynamic.data.mapping.model.DDMStructure;
-import com.liferay.dynamic.data.mapping.model.DDMTemplate;
-import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestUtil;
-import com.liferay.dynamic.data.mapping.test.util.DDMTemplateTestUtil;
+import com.liferay.dynamic.data.mapping.kernel.DDMForm;
+import com.liferay.dynamic.data.mapping.kernel.DDMStructure;
+import com.liferay.dynamic.data.mapping.kernel.DDMTemplate;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.test.util.lar.BaseWorkflowedStagedModelDataHandlerTestCase;
 import com.liferay.journal.model.JournalArticle;
@@ -54,6 +52,8 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.portlet.dynamicdatamapping.util.test.DDMStructureTestUtil;
+import com.liferay.portlet.dynamicdatamapping.util.test.DDMTemplateTestUtil;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 
@@ -258,12 +258,15 @@ public class AMJournalArticleStagedModelDataHandlerTest
 			LocaleUtil.getSiteDefault());
 
 		DDMStructure ddmStructure = DDMStructureTestUtil.addStructure(
-			stagingGroup.getGroupId(), JournalArticle.class.getName(), 0,
+			stagingGroup.getGroupId(), JournalArticle.class.getName(), "0",
 			ddmForm, LocaleUtil.getSiteDefault(),
 			ServiceContextTestUtil.getServiceContext());
 
 		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addTemplate(
-			stagingGroup.getGroupId(), ddmStructure.getStructureId(),
+			stagingGroup.getGroupId(),
+			PortalUtil.getClassNameId(
+				com.liferay.dynamic.data.mapping.model.DDMStructure.class),
+			ddmStructure.getStructureId(),
 			PortalUtil.getClassNameId(JournalArticle.class));
 
 		JournalFolder journalFolder = JournalFolderLocalServiceUtil.addFolder(
