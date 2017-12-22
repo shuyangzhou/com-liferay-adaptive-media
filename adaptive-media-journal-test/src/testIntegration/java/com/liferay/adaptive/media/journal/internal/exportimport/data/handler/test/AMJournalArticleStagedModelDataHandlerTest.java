@@ -126,7 +126,7 @@ public class AMJournalArticleStagedModelDataHandlerTest
 	}
 
 	@Test
-	public void testExportImportContentWithMultipleReferences()
+	public void testExportImportContentWithMultipleDynamicReferences()
 		throws Exception {
 
 		ServiceContext serviceContext = _getServiceContext();
@@ -195,8 +195,9 @@ public class AMJournalArticleStagedModelDataHandlerTest
 
 		ServiceContext serviceContext = _getServiceContext();
 
-		return _addJournalArticle(
-			_getImgTag(_addImageFileEntry(serviceContext)), serviceContext);
+		FileEntry fileEntry = _addImageFileEntry(serviceContext);
+
+		return _addJournalArticle(_getImgTag(fileEntry), serviceContext);
 	}
 
 	@Override
@@ -205,10 +206,10 @@ public class AMJournalArticleStagedModelDataHandlerTest
 
 		ServiceContext serviceContext = _getServiceContext();
 
+		FileEntry fileEntry = _addImageFileEntry(serviceContext);
+
 		return Collections.singletonList(
-			_addJournalArticle(
-				_getImgTag(_addImageFileEntry(serviceContext)),
-				serviceContext));
+			_addJournalArticle(_getImgTag(fileEntry), serviceContext));
 	}
 
 	@Override
