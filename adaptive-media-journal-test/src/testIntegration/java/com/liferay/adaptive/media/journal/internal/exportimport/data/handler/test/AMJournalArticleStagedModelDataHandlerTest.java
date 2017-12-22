@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.StagedModel;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.test.AssertUtils;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
@@ -144,7 +145,7 @@ public class AMJournalArticleStagedModelDataHandlerTest
 		JournalArticle importedJournalArticle = (JournalArticle)getStagedModel(
 			journalArticle.getUuid(), liveGroup);
 
-		XMLAssert.assertEquals(
+		_assertXMLEquals(
 			_getExpectedDynamicContent(fileEntry1, fileEntry2),
 			importedJournalArticle.getContent());
 	}
@@ -168,7 +169,7 @@ public class AMJournalArticleStagedModelDataHandlerTest
 		JournalArticle importedJournalArticle = (JournalArticle)getStagedModel(
 			journalArticle.getUuid(), liveGroup);
 
-		XMLAssert.assertEquals(
+		_assertXMLEquals(
 			_getExpectedStaticContent(fileEntry1, fileEntry2),
 			importedJournalArticle.getContent());
 	}
@@ -277,6 +278,14 @@ public class AMJournalArticleStagedModelDataHandlerTest
 			ddmTemplate.getTemplateKey(), null, 1, 1, 1965, 0, 0, 0, 0, 0, 0, 0,
 			true, 0, 0, 0, 0, 0, true, true, false, null, null, null, null,
 			serviceContext);
+	}
+
+	private void _assertXMLEquals(String expectedXML, String actualXML)
+		throws Exception {
+
+		AssertUtils.assertEqualsIgnoreCase(
+			SAXReaderUtil.read(expectedXML).formattedString(),
+			SAXReaderUtil.read(actualXML).formattedString());
 	}
 
 	private String _getContent(String html) throws Exception {
