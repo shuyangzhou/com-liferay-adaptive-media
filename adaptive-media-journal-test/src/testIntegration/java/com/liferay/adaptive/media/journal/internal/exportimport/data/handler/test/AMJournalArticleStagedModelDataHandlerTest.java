@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.adaptive.media.journal.test;
+package com.liferay.adaptive.media.journal.internal.exportimport.data.handler.test;
 
 import com.liferay.adaptive.media.image.configuration.AMImageConfigurationHelper;
 import com.liferay.adaptive.media.image.html.AMImageHTMLTagFactory;
