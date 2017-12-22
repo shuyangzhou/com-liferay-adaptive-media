@@ -18,7 +18,7 @@ import com.liferay.adaptive.media.image.configuration.AMImageConfigurationHelper
 import com.liferay.adaptive.media.image.html.AMImageHTMLTagFactory;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
-import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
+import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.dynamic.data.mapping.kernel.DDMForm;
 import com.liferay.dynamic.data.mapping.kernel.DDMStructure;
 import com.liferay.dynamic.data.mapping.kernel.DDMTemplate;
@@ -28,8 +28,8 @@ import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.model.JournalFolderConstants;
-import com.liferay.journal.service.JournalArticleLocalServiceUtil;
-import com.liferay.journal.service.JournalFolderLocalServiceUtil;
+import com.liferay.journal.service.JournalArticleLocalService;
+import com.liferay.journal.service.JournalFolderLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.StagedModel;
@@ -51,11 +51,10 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portlet.dynamicdatamapping.util.test.DDMStructureTestUtil;
 import com.liferay.portlet.dynamicdatamapping.util.test.DDMTemplateTestUtil;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,17 +91,12 @@ public class AMJournalArticleStagedModelDataHandlerTest
 	public void setUp() throws Exception {
 		super.setUp();
 
-		Registry registry = RegistryUtil.getRegistry();
-
-		AMImageConfigurationHelper amImageConfigurationHelper =
-			registry.getService(AMImageConfigurationHelper.class);
-
 		Map<String, String> properties = new HashMap<>();
 
 		properties.put("max-height", "600");
 		properties.put("max-width", "800");
 
-		amImageConfigurationHelper.addAMImageConfigurationEntry(
+		_amImageConfigurationHelper.addAMImageConfigurationEntry(
 			stagingGroup.getCompanyId(), StringUtil.randomString(),
 			StringUtil.randomString(), _AM_JOURNAL_CONFIG_UUID, properties);
 	}
@@ -110,12 +104,7 @@ public class AMJournalArticleStagedModelDataHandlerTest
 	@After
 	@Override
 	public void tearDown() throws Exception {
-		Registry registry = RegistryUtil.getRegistry();
-
-		AMImageConfigurationHelper amImageConfigurationHelper =
-			registry.getService(AMImageConfigurationHelper.class);
-
-		amImageConfigurationHelper.forceDeleteAMImageConfigurationEntry(
+		_amImageConfigurationHelper.forceDeleteAMImageConfigurationEntry(
 			stagingGroup.getCompanyId(), _AM_JOURNAL_CONFIG_UUID);
 
 		super.tearDown();
@@ -225,7 +214,7 @@ public class AMJournalArticleStagedModelDataHandlerTest
 	@Override
 	protected StagedModel getStagedModel(String uuid, Group group) {
 		try {
-			return JournalArticleLocalServiceUtil.
+			return _journalArticleLocalService.
 				getJournalArticleByUuidAndGroupId(uuid, group.getGroupId());
 		}
 		catch (Exception e) {
@@ -241,7 +230,7 @@ public class AMJournalArticleStagedModelDataHandlerTest
 	private FileEntry _addImageFileEntry(ServiceContext serviceContext)
 		throws Exception {
 
-		return DLAppLocalServiceUtil.addFileEntry(
+		return _dlAppLocalService.addFileEntry(
 			TestPropsValues.getUserId(), stagingGroup.getGroupId(),
 			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 			StringUtil.randomString(), ContentTypes.IMAGE_JPEG,
@@ -269,7 +258,7 @@ public class AMJournalArticleStagedModelDataHandlerTest
 			ddmStructure.getStructureId(),
 			PortalUtil.getClassNameId(JournalArticle.class));
 
-		JournalFolder journalFolder = JournalFolderLocalServiceUtil.addFolder(
+		JournalFolder journalFolder = _journalFolderLocalService.addFolder(
 			serviceContext.getUserId(), serviceContext.getScopeGroupId(),
 			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 			RandomTestUtil.randomString(), "This is a test folder.",
@@ -279,7 +268,7 @@ public class AMJournalArticleStagedModelDataHandlerTest
 
 		titleMap.put(LocaleUtil.getSiteDefault(), "Test Article");
 
-		return JournalArticleLocalServiceUtil.addArticle(
+		return _journalArticleLocalService.addArticle(
 			serviceContext.getUserId(), serviceContext.getScopeGroupId(),
 			journalFolder.getFolderId(),
 			JournalArticleConstants.CLASSNAME_ID_DEFAULT, 0, StringPool.BLANK,
@@ -327,7 +316,7 @@ public class AMJournalArticleStagedModelDataHandlerTest
 
 		for (FileEntry fileEntry : fileEntries) {
 			importedFileEntries.add(
-				DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(
+				_dlAppLocalService.getFileEntryByUuidAndGroupId(
 					fileEntry.getUuid(), liveGroup.getGroupId()));
 		}
 
@@ -338,20 +327,15 @@ public class AMJournalArticleStagedModelDataHandlerTest
 	private String _getExpectedStaticContent(FileEntry... fileEntries)
 		throws Exception {
 
-		Registry registry = RegistryUtil.getRegistry();
-
-		AMImageHTMLTagFactory amImageHTMLTagFactory = registry.getService(
-			AMImageHTMLTagFactory.class);
-
 		StringBundler sb = new StringBundler(fileEntries.length * 2);
 
 		for (FileEntry fileEntry : fileEntries) {
 			FileEntry importedFileEntry =
-				DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(
+				_dlAppLocalService.getFileEntryByUuidAndGroupId(
 					fileEntry.getUuid(), liveGroup.getGroupId());
 
 			sb.append(
-				amImageHTMLTagFactory.create(
+				_amImageHTMLTagFactory.create(
 					_getImgTag(importedFileEntry), importedFileEntry));
 
 			sb.append(StringPool.NEW_LINE);
@@ -403,5 +387,20 @@ public class AMJournalArticleStagedModelDataHandlerTest
 	}
 
 	private static final String _AM_JOURNAL_CONFIG_UUID = "journal-config";
+
+	@Inject
+	private AMImageConfigurationHelper _amImageConfigurationHelper;
+
+	@Inject
+	private AMImageHTMLTagFactory _amImageHTMLTagFactory;
+
+	@Inject
+	private DLAppLocalService _dlAppLocalService;
+
+	@Inject
+	private JournalArticleLocalService _journalArticleLocalService;
+
+	@Inject
+	private JournalFolderLocalService _journalFolderLocalService;
 
 }
