@@ -20,6 +20,8 @@ import com.liferay.adaptive.media.image.finder.AMImageFinder;
 import com.liferay.adaptive.media.image.mime.type.AMImageMimeTypeProvider;
 import com.liferay.adaptive.media.image.processor.AMImageAttribute;
 import com.liferay.adaptive.media.image.processor.AMImageProcessor;
+import com.liferay.adaptive.media.processor.AMAsyncProcessor;
+import com.liferay.adaptive.media.processor.AMAsyncProcessorLocator;
 import com.liferay.document.library.kernel.model.DLProcessorConstants;
 import com.liferay.document.library.kernel.util.DLProcessor;
 import com.liferay.document.library.kernel.util.ImageProcessor;
@@ -166,6 +168,8 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 				return true;
 			}
 
+			_processAMImage(fileVersion);
+
 			return false;
 		}
 		catch (PortalException pe) {
@@ -240,8 +244,27 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 			_amImageMimeTypeProvider.getSupportedMimeTypes(), mimeType);
 	}
 
+	private void _processAMImage(FileVersion fileVersion) {
+		try {
+			AMAsyncProcessor<FileVersion, ?> amAsyncProcessor =
+				_amAsyncProcessorLocator.locateForClass(FileVersion.class);
+
+			amAsyncProcessor.triggerProcess(
+				fileVersion, String.valueOf(fileVersion.getFileVersionId()));
+		}
+		catch (PortalException pe) {
+			_log.error(
+				"Unable to create lazy adaptive media for file version " +
+					fileVersion.getFileVersionId(),
+				pe);
+		}
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		AMImageEntryProcessor.class);
+
+	@Reference
+	private AMAsyncProcessorLocator _amAsyncProcessorLocator;
 
 	@Reference
 	private AMImageFinder _amImageFinder;
