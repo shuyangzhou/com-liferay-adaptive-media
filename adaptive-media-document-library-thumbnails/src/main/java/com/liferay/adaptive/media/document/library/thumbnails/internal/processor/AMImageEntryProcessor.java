@@ -253,6 +253,10 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 	}
 
 	private void _processAMImage(FileVersion fileVersion) {
+		if (!isSupported(fileVersion)) {
+			return;
+		}
+
 		try {
 			AMAsyncProcessor<FileVersion, ?> amAsyncProcessor =
 				_amAsyncProcessorLocator.locateForClass(FileVersion.class);
