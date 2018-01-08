@@ -120,6 +120,10 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 		Optional<AdaptiveMedia<AMImageProcessor>> adaptiveMediaOptional =
 			adaptiveMediaStream.findFirst();
 
+		if (!adaptiveMediaOptional.isPresent()) {
+			_processAMImage(fileVersion);
+		}
+
 		return adaptiveMediaOptional.map(
 			AdaptiveMedia::getInputStream
 		).orElse(
@@ -136,6 +140,10 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 
 		Optional<AdaptiveMedia<AMImageProcessor>> adaptiveMediaOptional =
 			adaptiveMediaStream.findFirst();
+
+		if (!adaptiveMediaOptional.isPresent()) {
+			_processAMImage(fileVersion);
+		}
 
 		return adaptiveMediaOptional.flatMap(
 			mediaMedia -> mediaMedia.getValueOptional(
