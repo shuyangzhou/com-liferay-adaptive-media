@@ -181,12 +181,17 @@ public final class AMImageProcessorImpl implements AMImageProcessor {
 		_amImageScalerTracker = amImageScalerTracker;
 	}
 
+	@Reference(unbind = "-")
+	public void setAMImageSizeValidator(
+		AMImageSizeValidator amImageSizeValidator) {
+
+		_amImageSizeValidator = amImageSizeValidator;
+	}
+
 	private AMImageConfigurationHelper _amImageConfigurationHelper;
 	private AMImageEntryLocalService _amImageEntryLocalService;
 	private AMImageMimeTypeProvider _amImageMimeTypeProvider;
 	private AMImageScalerTracker _amImageScalerTracker;
-
-	@Reference
 	private AMImageSizeValidator _amImageSizeValidator;
 
 }

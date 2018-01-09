@@ -25,6 +25,7 @@ import com.liferay.adaptive.media.image.model.AMImageEntry;
 import com.liferay.adaptive.media.image.scaler.AMImageScaler;
 import com.liferay.adaptive.media.image.scaler.AMImageScalerTracker;
 import com.liferay.adaptive.media.image.service.AMImageEntryLocalService;
+import com.liferay.adaptive.media.image.validator.AMImageSizeValidator;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.image.ImageTool;
 import com.liferay.portal.kernel.image.ImageToolUtil;
@@ -49,15 +50,18 @@ public class AMImageProcessorImplTest {
 
 	@Before
 	public void setUp() {
+		_amImageProcessorImpl.setAMImageConfigurationHelper(
+			_amImageConfigurationHelper);
+
 		_amImageProcessorImpl.setAMImageEntryLocalService(
 			_amImageEntryLocalService);
 
-		_amImageProcessorImpl.setAMImageScalerTracker(_amImageScalerTracker);
-
 		_amImageProcessorImpl.setAMImageMimeTypeProvider(
 			_amImageMimeTypeProvider);
-		_amImageProcessorImpl.setAMImageConfigurationHelper(
-			_amImageConfigurationHelper);
+
+		_amImageProcessorImpl.setAMImageScalerTracker(_amImageScalerTracker);
+
+		_amImageProcessorImpl.setAMImageSizeValidator(_amImageSizeValidator);
 
 		ImageToolUtil imageToolUtil = new ImageToolUtil();
 
@@ -147,6 +151,12 @@ public class AMImageProcessorImplTest {
 		);
 
 		Mockito.when(
+			_amImageSizeValidator.isValidSize(_fileVersion)
+		).thenReturn(
+			true
+		);
+
+		Mockito.when(
 			_amImageConfigurationHelper.getAMImageConfigurationEntry(
 				Mockito.anyLong(), Mockito.anyString())
 		).thenReturn(
@@ -192,6 +202,12 @@ public class AMImageProcessorImplTest {
 
 		Mockito.when(
 			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
+		).thenReturn(
+			true
+		);
+
+		Mockito.when(
+			_amImageSizeValidator.isValidSize(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -266,6 +282,12 @@ public class AMImageProcessorImplTest {
 			true
 		);
 
+		Mockito.when(
+			_amImageSizeValidator.isValidSize(_fileVersion)
+		).thenReturn(
+			true
+		);
+
 		AMImageConfigurationEntry amImageConfigurationEntry =
 			new AMImageConfigurationEntryImpl(
 				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
@@ -314,6 +336,12 @@ public class AMImageProcessorImplTest {
 		);
 
 		Mockito.when(
+			_amImageSizeValidator.isValidSize(_fileVersion)
+		).thenReturn(
+			true
+		);
+
+		Mockito.when(
 			_amImageConfigurationHelper.getAMImageConfigurationEntry(
 				Mockito.anyLong(), Mockito.anyString())
 		).thenReturn(
@@ -354,6 +382,12 @@ public class AMImageProcessorImplTest {
 
 		Mockito.when(
 			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
+		).thenReturn(
+			true
+		);
+
+		Mockito.when(
+			_amImageSizeValidator.isValidSize(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -406,6 +440,12 @@ public class AMImageProcessorImplTest {
 	public void testProcessFileVersion() throws Exception {
 		Mockito.when(
 			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
+		).thenReturn(
+			true
+		);
+
+		Mockito.when(
+			_amImageSizeValidator.isValidSize(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -466,6 +506,12 @@ public class AMImageProcessorImplTest {
 			true
 		);
 
+		Mockito.when(
+			_amImageSizeValidator.isValidSize(_fileVersion)
+		).thenReturn(
+			true
+		);
+
 		Mockito.doThrow(
 			AMRuntimeException.InvalidConfiguration.class
 		).when(
@@ -481,6 +527,12 @@ public class AMImageProcessorImplTest {
 	public void testProcessIOExceptionInImageProcessor() throws Exception {
 		Mockito.when(
 			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
+		).thenReturn(
+			true
+		);
+
+		Mockito.when(
+			_amImageSizeValidator.isValidSize(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -529,6 +581,12 @@ public class AMImageProcessorImplTest {
 			true
 		);
 
+		Mockito.when(
+			_amImageSizeValidator.isValidSize(_fileVersion)
+		).thenReturn(
+			true
+		);
+
 		AMImageConfigurationEntry amImageConfigurationEntry =
 			new AMImageConfigurationEntryImpl(
 				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
@@ -571,6 +629,29 @@ public class AMImageProcessorImplTest {
 		);
 
 		_amImageProcessorImpl.process(_fileVersion);
+	}
+
+	@Test
+	public void testProcessWhenInvalidSize() throws Exception {
+		Mockito.when(
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
+		).thenReturn(
+			true
+		);
+
+		Mockito.when(
+			_amImageSizeValidator.isValidSize(_fileVersion)
+		).thenReturn(
+			false
+		);
+
+		_amImageProcessorImpl.process(_fileVersion);
+
+		Mockito.verify(
+			_amImageConfigurationHelper, Mockito.never()
+		).getAMImageConfigurationEntries(
+			Mockito.anyLong()
+		);
 	}
 
 	@Test
@@ -635,6 +716,8 @@ public class AMImageProcessorImplTest {
 		AMImageScaler.class);
 	private final AMImageScalerTracker _amImageScalerTracker = Mockito.mock(
 		AMImageScalerTracker.class);
+	private final AMImageSizeValidator _amImageSizeValidator = Mockito.mock(
+		AMImageSizeValidator.class);
 	private final FileEntry _fileEntry = Mockito.mock(FileEntry.class);
 	private final FileVersion _fileVersion = Mockito.mock(FileVersion.class);
 	private final ImageTool _imageTool = Mockito.mock(ImageTool.class);
