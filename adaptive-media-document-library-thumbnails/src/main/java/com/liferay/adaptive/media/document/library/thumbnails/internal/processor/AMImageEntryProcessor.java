@@ -198,7 +198,7 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 
 	@Override
 	public boolean isImageSupported(FileVersion fileVersion) {
-		return _isMimeTypeSupported(fileVersion.getMimeType());
+		return _amImageValidator.isValid(fileVersion);
 	}
 
 	@Override
@@ -208,7 +208,7 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 
 	@Override
 	public boolean isSupported(FileVersion fileVersion) {
-		return _isMimeTypeSupported(fileVersion.getMimeType());
+		return _amImageValidator.isValid(fileVersion);
 	}
 
 	@Override
