@@ -24,7 +24,7 @@ import com.liferay.adaptive.media.image.scaler.AMImageScaledImage;
 import com.liferay.adaptive.media.image.scaler.AMImageScaler;
 import com.liferay.adaptive.media.image.scaler.AMImageScalerTracker;
 import com.liferay.adaptive.media.image.service.AMImageEntryLocalService;
-import com.liferay.adaptive.media.image.validator.AMImageSizeValidator;
+import com.liferay.adaptive.media.image.validator.AMImageValidator;
 import com.liferay.adaptive.media.processor.AMProcessor;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -73,7 +73,7 @@ public final class AMImageProcessorImpl implements AMImageProcessor {
 			return;
 		}
 
-		if (!_amImageSizeValidator.isValidSize(fileVersion)) {
+		if (!_amImageValidator.isValid(fileVersion)) {
 			return;
 		}
 
@@ -96,7 +96,7 @@ public final class AMImageProcessorImpl implements AMImageProcessor {
 			return;
 		}
 
-		if (!_amImageSizeValidator.isValidSize(fileVersion)) {
+		if (!_amImageValidator.isValid(fileVersion)) {
 			return;
 		}
 
@@ -182,16 +182,16 @@ public final class AMImageProcessorImpl implements AMImageProcessor {
 	}
 
 	@Reference(unbind = "-")
-	public void setAMImageSizeValidator(
-		AMImageSizeValidator amImageSizeValidator) {
+	public void setAMImageValidator(
+		AMImageValidator amImageValidator) {
 
-		_amImageSizeValidator = amImageSizeValidator;
+		_amImageValidator = amImageValidator;
 	}
 
 	private AMImageConfigurationHelper _amImageConfigurationHelper;
 	private AMImageEntryLocalService _amImageEntryLocalService;
 	private AMImageMimeTypeProvider _amImageMimeTypeProvider;
 	private AMImageScalerTracker _amImageScalerTracker;
-	private AMImageSizeValidator _amImageSizeValidator;
+	private AMImageValidator _amImageValidator;
 
 }

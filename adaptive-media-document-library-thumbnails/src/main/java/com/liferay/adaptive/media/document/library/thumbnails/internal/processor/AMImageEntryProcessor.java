@@ -20,7 +20,7 @@ import com.liferay.adaptive.media.image.finder.AMImageFinder;
 import com.liferay.adaptive.media.image.mime.type.AMImageMimeTypeProvider;
 import com.liferay.adaptive.media.image.processor.AMImageAttribute;
 import com.liferay.adaptive.media.image.processor.AMImageProcessor;
-import com.liferay.adaptive.media.image.validator.AMImageSizeValidator;
+import com.liferay.adaptive.media.image.validator.AMImageValidator;
 import com.liferay.adaptive.media.processor.AMAsyncProcessor;
 import com.liferay.adaptive.media.processor.AMAsyncProcessorLocator;
 import com.liferay.document.library.kernel.model.DLProcessorConstants;
@@ -236,10 +236,10 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 	}
 
 	@Reference(unbind = "-")
-	public void setAMImageSizeValidator(
-		AMImageSizeValidator amImageSizeValidator) {
+	public void setAMImageValidator(
+		AMImageValidator amImageValidator) {
 
-		_amImageSizeValidator = amImageSizeValidator;
+		_amImageValidator = amImageValidator;
 	}
 
 	@Override
@@ -282,7 +282,7 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 			return;
 		}
 
-		if (!_amImageSizeValidator.isValidSize(fileVersion)) {
+		if (!_amImageValidator.isValid(fileVersion)) {
 			return;
 		}
 
@@ -307,7 +307,7 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 	private AMAsyncProcessorLocator _amAsyncProcessorLocator;
 	private AMImageFinder _amImageFinder;
 	private AMImageMimeTypeProvider _amImageMimeTypeProvider;
-	private AMImageSizeValidator _amImageSizeValidator;
+	private AMImageValidator _amImageValidator;
 	private final ImageProcessor _imageProcessor = new ImageProcessorImpl();
 
 }

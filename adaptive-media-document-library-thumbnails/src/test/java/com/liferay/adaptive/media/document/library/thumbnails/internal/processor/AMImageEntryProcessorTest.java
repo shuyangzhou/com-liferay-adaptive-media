@@ -17,7 +17,7 @@ package com.liferay.adaptive.media.document.library.thumbnails.internal.processo
 import com.liferay.adaptive.media.AdaptiveMedia;
 import com.liferay.adaptive.media.image.finder.AMImageFinder;
 import com.liferay.adaptive.media.image.mime.type.AMImageMimeTypeProvider;
-import com.liferay.adaptive.media.image.validator.AMImageSizeValidator;
+import com.liferay.adaptive.media.image.validator.AMImageValidator;
 import com.liferay.adaptive.media.processor.AMAsyncProcessor;
 import com.liferay.adaptive.media.processor.AMAsyncProcessorLocator;
 import com.liferay.portal.kernel.repository.model.FileVersion;
@@ -51,7 +51,7 @@ public class AMImageEntryProcessorTest {
 		_amImageEntryProcessor.setAMImageMimeTypeProvider(
 			_amImageMimeTypeProvider);
 
-		_amImageEntryProcessor.setAMImageSizeValidator(_amImageSizeValidator);
+		_amImageEntryProcessor.setAMImageValidator(_amImageValidator);
 
 		_amImageEntryProcessor.setAMAsyncProcessorLocator(
 			_amAsyncProcessorLocator);
@@ -93,7 +93,7 @@ public class AMImageEntryProcessorTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			false
 		);
@@ -149,7 +149,7 @@ public class AMImageEntryProcessorTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -205,7 +205,7 @@ public class AMImageEntryProcessorTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			false
 		);
@@ -261,7 +261,7 @@ public class AMImageEntryProcessorTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -311,7 +311,7 @@ public class AMImageEntryProcessorTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			false
 		);
@@ -367,7 +367,7 @@ public class AMImageEntryProcessorTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -393,8 +393,8 @@ public class AMImageEntryProcessorTest {
 		AMImageFinder.class);
 	private final AMImageMimeTypeProvider _amImageMimeTypeProvider =
 		Mockito.mock(AMImageMimeTypeProvider.class);
-	private final AMImageSizeValidator _amImageSizeValidator = Mockito.mock(
-		AMImageSizeValidator.class);
+	private final AMImageValidator _amImageValidator = Mockito.mock(
+		AMImageValidator.class);
 	private final FileVersion _fileVersion = Mockito.mock(FileVersion.class);
 
 }

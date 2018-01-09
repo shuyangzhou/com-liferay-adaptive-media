@@ -15,7 +15,7 @@
 package com.liferay.adaptive.media.image.internal.validator;
 
 import com.liferay.adaptive.media.image.internal.configuration.AMImageConfiguration;
-import com.liferay.adaptive.media.image.validator.AMImageSizeValidator;
+import com.liferay.adaptive.media.image.validator.AMImageValidator;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 
@@ -31,10 +31,10 @@ import org.osgi.service.component.annotations.Modified;
 @Component(
 	configurationPid = "com.liferay.adaptive.media.image.internal.configuration.AMImageConfiguration"
 )
-public class AMImageSizeValidatorImpl implements AMImageSizeValidator {
+public class AMImageValidatorImpl implements AMImageValidator {
 
 	@Override
-	public boolean isValidSize(FileVersion fileVersion) {
+	public boolean isValid(FileVersion fileVersion) {
 		long imageMaxSize = _amImageConfiguration.imageMaxSize();
 
 		if (imageMaxSize == -1) {

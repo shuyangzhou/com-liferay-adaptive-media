@@ -21,15 +21,15 @@ import com.liferay.portal.kernel.repository.model.FileVersion;
  *
  * @author Sergio González
  */
-public interface AMImageSizeValidator {
+public interface AMImageValidator {
 
 	/**
-	 * Returns <code>true</code> if the provided file version has a valid size
-	 * for Adaptive Media.
+	 * Returns <code>true</code> if the provided file version is valid for
+	 * Adaptive Media.
 	 *
-	 * @return <code>true</code> if the file version size is valid for Adaptive
+	 * @return <code>true</code> if the file version is valid for Adaptive
 	 *         Media
 	 */
-	public boolean isValidSize(FileVersion fileVersion);
+	public boolean isValid(FileVersion fileVersion);
 
 }

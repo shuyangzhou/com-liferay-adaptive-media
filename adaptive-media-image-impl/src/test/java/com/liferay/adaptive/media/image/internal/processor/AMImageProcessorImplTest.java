@@ -25,7 +25,7 @@ import com.liferay.adaptive.media.image.model.AMImageEntry;
 import com.liferay.adaptive.media.image.scaler.AMImageScaler;
 import com.liferay.adaptive.media.image.scaler.AMImageScalerTracker;
 import com.liferay.adaptive.media.image.service.AMImageEntryLocalService;
-import com.liferay.adaptive.media.image.validator.AMImageSizeValidator;
+import com.liferay.adaptive.media.image.validator.AMImageValidator;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.image.ImageTool;
 import com.liferay.portal.kernel.image.ImageToolUtil;
@@ -61,7 +61,7 @@ public class AMImageProcessorImplTest {
 
 		_amImageProcessorImpl.setAMImageScalerTracker(_amImageScalerTracker);
 
-		_amImageProcessorImpl.setAMImageSizeValidator(_amImageSizeValidator);
+		_amImageProcessorImpl.setAMImageValidator(_amImageValidator);
 
 		ImageToolUtil imageToolUtil = new ImageToolUtil();
 
@@ -151,7 +151,7 @@ public class AMImageProcessorImplTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -207,7 +207,7 @@ public class AMImageProcessorImplTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -283,7 +283,7 @@ public class AMImageProcessorImplTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -336,7 +336,7 @@ public class AMImageProcessorImplTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -387,7 +387,7 @@ public class AMImageProcessorImplTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -445,7 +445,7 @@ public class AMImageProcessorImplTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -507,7 +507,7 @@ public class AMImageProcessorImplTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -532,7 +532,7 @@ public class AMImageProcessorImplTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -582,7 +582,7 @@ public class AMImageProcessorImplTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
 		);
@@ -640,7 +640,7 @@ public class AMImageProcessorImplTest {
 		);
 
 		Mockito.when(
-			_amImageSizeValidator.isValidSize(_fileVersion)
+			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			false
 		);
@@ -716,8 +716,8 @@ public class AMImageProcessorImplTest {
 		AMImageScaler.class);
 	private final AMImageScalerTracker _amImageScalerTracker = Mockito.mock(
 		AMImageScalerTracker.class);
-	private final AMImageSizeValidator _amImageSizeValidator = Mockito.mock(
-		AMImageSizeValidator.class);
+	private final AMImageValidator _amImageValidator = Mockito.mock(
+		AMImageValidator.class);
 	private final FileEntry _fileEntry = Mockito.mock(FileEntry.class);
 	private final FileVersion _fileVersion = Mockito.mock(FileVersion.class);
 	private final ImageTool _imageTool = Mockito.mock(ImageTool.class);
