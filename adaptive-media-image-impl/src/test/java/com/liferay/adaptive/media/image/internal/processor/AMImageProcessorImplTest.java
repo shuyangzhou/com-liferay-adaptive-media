@@ -20,7 +20,6 @@ import com.liferay.adaptive.media.image.configuration.AMImageConfigurationHelper
 import com.liferay.adaptive.media.image.exception.DuplicateAMImageEntryException;
 import com.liferay.adaptive.media.image.internal.configuration.AMImageConfigurationEntryImpl;
 import com.liferay.adaptive.media.image.internal.scaler.AMImageScaledImageImpl;
-import com.liferay.adaptive.media.image.mime.type.AMImageMimeTypeProvider;
 import com.liferay.adaptive.media.image.model.AMImageEntry;
 import com.liferay.adaptive.media.image.scaler.AMImageScaler;
 import com.liferay.adaptive.media.image.scaler.AMImageScalerTracker;
@@ -68,7 +67,7 @@ public class AMImageProcessorImplTest {
 	@Test
 	public void testCleanUpFileVersion() throws Exception {
 		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
+			_amImageValidator.isValid(Mockito.any(FileVersion.class))
 		).thenReturn(
 			true
 		);
@@ -85,7 +84,7 @@ public class AMImageProcessorImplTest {
 	@Test(expected = AMRuntimeException.IOException.class)
 	public void testCleanUpIOException() throws Exception {
 		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
+			_amImageValidator.isValid(Mockito.any(FileVersion.class))
 		).thenReturn(
 			true
 		);
@@ -104,7 +103,7 @@ public class AMImageProcessorImplTest {
 	@Test(expected = AMRuntimeException.IOException.class)
 	public void testCleanUpPortalException() throws Exception {
 		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
+			_amImageValidator.isValid(Mockito.any(FileVersion.class))
 		).thenReturn(
 			true
 		);
@@ -123,7 +122,7 @@ public class AMImageProcessorImplTest {
 	@Test
 	public void testCleanUpWhenNotSupported() throws Exception {
 		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
+			_amImageValidator.isValid(Mockito.any(FileVersion.class))
 		).thenReturn(
 			false
 		);
@@ -140,12 +139,6 @@ public class AMImageProcessorImplTest {
 	@Test
 	public void testProcessConfigurationWhenAMImageEntryAlreadyExists()
 		throws Exception {
-
-		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
-		).thenReturn(
-			true
-		);
 
 		Mockito.when(
 			_amImageValidator.isValid(_fileVersion)
@@ -196,12 +189,6 @@ public class AMImageProcessorImplTest {
 	@Test
 	public void testProcessConfigurationWhenFileEntryIsCheckedOut()
 		throws Exception {
-
-		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
-		).thenReturn(
-			true
-		);
 
 		Mockito.when(
 			_amImageValidator.isValid(_fileVersion)
@@ -274,12 +261,6 @@ public class AMImageProcessorImplTest {
 		throws Exception {
 
 		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
-		).thenReturn(
-			true
-		);
-
-		Mockito.when(
 			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
@@ -327,12 +308,6 @@ public class AMImageProcessorImplTest {
 		throws Exception {
 
 		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
-		).thenReturn(
-			true
-		);
-
-		Mockito.when(
 			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
@@ -358,7 +333,7 @@ public class AMImageProcessorImplTest {
 	@Test
 	public void testProcessConfigurationWhenNotSupported() throws Exception {
 		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
+			_amImageValidator.isValid(Mockito.any(FileVersion.class))
 		).thenReturn(
 			false
 		);
@@ -376,12 +351,6 @@ public class AMImageProcessorImplTest {
 	@Test(expected = AMRuntimeException.IOException.class)
 	public void testProcessDuplicateAMImageEntryExceptionInImageService()
 		throws Exception {
-
-		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
-		).thenReturn(
-			true
-		);
 
 		Mockito.when(
 			_amImageValidator.isValid(_fileVersion)
@@ -435,12 +404,6 @@ public class AMImageProcessorImplTest {
 
 	@Test
 	public void testProcessFileVersion() throws Exception {
-		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
-		).thenReturn(
-			true
-		);
-
 		Mockito.when(
 			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
@@ -498,12 +461,6 @@ public class AMImageProcessorImplTest {
 	@Test(expected = AMRuntimeException.InvalidConfiguration.class)
 	public void testProcessInvalidConfigurationException() throws Exception {
 		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
-		).thenReturn(
-			true
-		);
-
-		Mockito.when(
 			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
 			true
@@ -522,12 +479,6 @@ public class AMImageProcessorImplTest {
 
 	@Test(expected = AMRuntimeException.IOException.class)
 	public void testProcessIOExceptionInImageProcessor() throws Exception {
-		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
-		).thenReturn(
-			true
-		);
-
 		Mockito.when(
 			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
@@ -572,12 +523,6 @@ public class AMImageProcessorImplTest {
 
 	@Test(expected = AMRuntimeException.IOException.class)
 	public void testProcessIOExceptionInStorage() throws Exception {
-		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
-		).thenReturn(
-			true
-		);
-
 		Mockito.when(
 			_amImageValidator.isValid(_fileVersion)
 		).thenReturn(
@@ -629,32 +574,9 @@ public class AMImageProcessorImplTest {
 	}
 
 	@Test
-	public void testProcessWhenInvalidSize() throws Exception {
-		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
-		).thenReturn(
-			true
-		);
-
-		Mockito.when(
-			_amImageValidator.isValid(_fileVersion)
-		).thenReturn(
-			false
-		);
-
-		_amImageProcessorImpl.process(_fileVersion);
-
-		Mockito.verify(
-			_amImageConfigurationHelper, Mockito.never()
-		).getAMImageConfigurationEntries(
-			Mockito.anyLong()
-		);
-	}
-
-	@Test
 	public void testProcessWhenNoConfigurationEntries() throws Exception {
 		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
+			_amImageValidator.isValid(Mockito.any(FileVersion.class))
 		).thenReturn(
 			true
 		);
@@ -687,7 +609,7 @@ public class AMImageProcessorImplTest {
 	@Test
 	public void testProcessWhenNotSupported() throws Exception {
 		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
+			_amImageValidator.isValid(Mockito.any(FileVersion.class))
 		).thenReturn(
 			false
 		);
@@ -705,8 +627,6 @@ public class AMImageProcessorImplTest {
 		Mockito.mock(AMImageConfigurationHelper.class);
 	private final AMImageEntryLocalService _amImageEntryLocalService =
 		Mockito.mock(AMImageEntryLocalService.class);
-	private final AMImageMimeTypeProvider _amImageMimeTypeProvider =
-		Mockito.mock(AMImageMimeTypeProvider.class);
 	private final AMImageProcessorImpl _amImageProcessorImpl =
 		new AMImageProcessorImpl();
 	private final AMImageScaler _amImageScaler = Mockito.mock(
