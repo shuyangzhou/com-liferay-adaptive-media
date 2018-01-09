@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.xml.Element;
@@ -217,6 +216,32 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 		return _isMimeTypeSupported(mimeType);
 	}
 
+	@Reference(unbind = "-")
+	public void setAMAsyncProcessorLocator(
+		AMAsyncProcessorLocator amAsyncProcessorLocator) {
+
+		_amAsyncProcessorLocator = amAsyncProcessorLocator;
+	}
+
+	@Reference(unbind = "-")
+	public void setAMImageFinder(AMImageFinder amImageFinder) {
+		_amImageFinder = amImageFinder;
+	}
+
+	@Reference(unbind = "-")
+	public void setAMImageMimeTypeProvider(
+		AMImageMimeTypeProvider amImageMimeTypeProvider) {
+
+		_amImageMimeTypeProvider = amImageMimeTypeProvider;
+	}
+
+	@Reference(unbind = "-")
+	public void setAMImageSizeValidator(
+		AMImageSizeValidator amImageSizeValidator) {
+
+		_amImageSizeValidator = amImageSizeValidator;
+	}
+
 	@Override
 	public void storeThumbnail(
 			long companyId, long groupId, long fileEntryId, long fileVersionId,
@@ -249,8 +274,7 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 	}
 
 	private boolean _isMimeTypeSupported(String mimeType) {
-		return ArrayUtil.contains(
-			_amImageMimeTypeProvider.getSupportedMimeTypes(), mimeType);
+		return _amImageMimeTypeProvider.isMimeTypeSupported(mimeType);
 	}
 
 	private void _processAMImage(FileVersion fileVersion) {
@@ -280,18 +304,10 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 	private static final Log _log = LogFactoryUtil.getLog(
 		AMImageEntryProcessor.class);
 
-	@Reference
 	private AMAsyncProcessorLocator _amAsyncProcessorLocator;
-
-	@Reference
 	private AMImageFinder _amImageFinder;
-
-	@Reference
 	private AMImageMimeTypeProvider _amImageMimeTypeProvider;
-
-	@Reference
 	private AMImageSizeValidator _amImageSizeValidator;
-
 	private final ImageProcessor _imageProcessor = new ImageProcessorImpl();
 
 }
