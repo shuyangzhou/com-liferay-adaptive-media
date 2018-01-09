@@ -56,9 +56,6 @@ public class AMImageProcessorImplTest {
 		_amImageProcessorImpl.setAMImageEntryLocalService(
 			_amImageEntryLocalService);
 
-		_amImageProcessorImpl.setAMImageMimeTypeProvider(
-			_amImageMimeTypeProvider);
-
 		_amImageProcessorImpl.setAMImageScalerTracker(_amImageScalerTracker);
 
 		_amImageProcessorImpl.setAMImageValidator(_amImageValidator);

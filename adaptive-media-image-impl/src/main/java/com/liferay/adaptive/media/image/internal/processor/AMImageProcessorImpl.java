@@ -17,7 +17,6 @@ package com.liferay.adaptive.media.image.internal.processor;
 import com.liferay.adaptive.media.exception.AMRuntimeException;
 import com.liferay.adaptive.media.image.configuration.AMImageConfigurationEntry;
 import com.liferay.adaptive.media.image.configuration.AMImageConfigurationHelper;
-import com.liferay.adaptive.media.image.mime.type.AMImageMimeTypeProvider;
 import com.liferay.adaptive.media.image.model.AMImageEntry;
 import com.liferay.adaptive.media.image.processor.AMImageProcessor;
 import com.liferay.adaptive.media.image.scaler.AMImageScaledImage;
@@ -51,9 +50,7 @@ public final class AMImageProcessorImpl implements AMImageProcessor {
 	@Override
 	public void cleanUp(FileVersion fileVersion) {
 		try {
-			if (!_amImageMimeTypeProvider.isMimeTypeSupported(
-					fileVersion.getMimeType())) {
-
+			if (!_amImageValidator.isValid(fileVersion)) {
 				return;
 			}
 
@@ -156,13 +153,6 @@ public final class AMImageProcessorImpl implements AMImageProcessor {
 	}
 
 	@Reference(unbind = "-")
-	public void setAMImageMimeTypeProvider(
-		AMImageMimeTypeProvider amImageMimeTypeProvider) {
-
-		_amImageMimeTypeProvider = amImageMimeTypeProvider;
-	}
-
-	@Reference(unbind = "-")
 	public void setAMImageScalerTracker(
 		AMImageScalerTracker amImageScalerTracker) {
 
@@ -176,7 +166,6 @@ public final class AMImageProcessorImpl implements AMImageProcessor {
 
 	private AMImageConfigurationHelper _amImageConfigurationHelper;
 	private AMImageEntryLocalService _amImageEntryLocalService;
-	private AMImageMimeTypeProvider _amImageMimeTypeProvider;
 	private AMImageScalerTracker _amImageScalerTracker;
 	private AMImageValidator _amImageValidator;
 
