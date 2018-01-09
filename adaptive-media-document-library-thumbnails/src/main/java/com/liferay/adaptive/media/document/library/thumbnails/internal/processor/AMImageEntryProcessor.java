@@ -236,9 +236,7 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 	}
 
 	@Reference(unbind = "-")
-	public void setAMImageValidator(
-		AMImageValidator amImageValidator) {
-
+	public void setAMImageValidator(AMImageValidator amImageValidator) {
 		_amImageValidator = amImageValidator;
 	}
 

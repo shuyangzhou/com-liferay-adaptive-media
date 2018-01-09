@@ -182,9 +182,7 @@ public final class AMImageProcessorImpl implements AMImageProcessor {
 	}
 
 	@Reference(unbind = "-")
-	public void setAMImageValidator(
-		AMImageValidator amImageValidator) {
-
+	public void setAMImageValidator(AMImageValidator amImageValidator) {
 		_amImageValidator = amImageValidator;
 	}
 
