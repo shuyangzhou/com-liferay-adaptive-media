@@ -67,12 +67,6 @@ public final class AMImageProcessorImpl implements AMImageProcessor {
 
 	@Override
 	public void process(FileVersion fileVersion) {
-		if (!_amImageMimeTypeProvider.isMimeTypeSupported(
-				fileVersion.getMimeType())) {
-
-			return;
-		}
-
 		if (!_amImageValidator.isValid(fileVersion)) {
 			return;
 		}
@@ -89,12 +83,6 @@ public final class AMImageProcessorImpl implements AMImageProcessor {
 	@Override
 	public void process(
 		FileVersion fileVersion, String configurationEntryUuid) {
-
-		if (!_amImageMimeTypeProvider.isMimeTypeSupported(
-				fileVersion.getMimeType())) {
-
-			return;
-		}
 
 		if (!_amImageValidator.isValid(fileVersion)) {
 			return;

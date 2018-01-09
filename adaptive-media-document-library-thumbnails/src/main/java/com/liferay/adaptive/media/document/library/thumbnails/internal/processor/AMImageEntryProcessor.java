@@ -276,10 +276,6 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 	}
 
 	private void _processAMImage(FileVersion fileVersion) {
-		if (!isSupported(fileVersion)) {
-			return;
-		}
-
 		if (!_amImageValidator.isValid(fileVersion)) {
 			return;
 		}

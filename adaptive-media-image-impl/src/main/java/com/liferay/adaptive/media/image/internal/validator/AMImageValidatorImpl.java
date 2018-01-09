@@ -15,6 +15,7 @@
 package com.liferay.adaptive.media.image.internal.validator;
 
 import com.liferay.adaptive.media.image.internal.configuration.AMImageConfiguration;
+import com.liferay.adaptive.media.image.mime.type.AMImageMimeTypeProvider;
 import com.liferay.adaptive.media.image.validator.AMImageValidator;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.repository.model.FileVersion;
@@ -24,6 +25,7 @@ import java.util.Map;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Sergio González
@@ -49,7 +51,13 @@ public class AMImageValidatorImpl implements AMImageValidator {
 			return false;
 		}
 
-		return true;
+		if (_amImageMimeTypeProvider.isMimeTypeSupported(
+				fileVersion.getMimeType())) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	@Activate
@@ -60,5 +68,8 @@ public class AMImageValidatorImpl implements AMImageValidator {
 	}
 
 	private volatile AMImageConfiguration _amImageConfiguration;
+
+	@Reference
+	private AMImageMimeTypeProvider _amImageMimeTypeProvider;
 
 }
