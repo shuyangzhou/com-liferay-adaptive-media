@@ -39,25 +39,19 @@ public class AMImageValidatorImpl implements AMImageValidator {
 	public boolean isValid(FileVersion fileVersion) {
 		long imageMaxSize = _amImageConfiguration.imageMaxSize();
 
-		if (imageMaxSize == -1) {
-			return true;
-		}
+		if ((imageMaxSize != -1) &&
+			((imageMaxSize == 0) || (fileVersion.getSize() >= imageMaxSize))) {
 
-		if (imageMaxSize == 0) {
 			return false;
 		}
 
-		if (imageMaxSize < fileVersion.getSize()) {
-			return false;
-		}
-
-		if (_amImageMimeTypeProvider.isMimeTypeSupported(
+		if (!_amImageMimeTypeProvider.isMimeTypeSupported(
 				fileVersion.getMimeType())) {
 
-			return true;
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	@Activate
