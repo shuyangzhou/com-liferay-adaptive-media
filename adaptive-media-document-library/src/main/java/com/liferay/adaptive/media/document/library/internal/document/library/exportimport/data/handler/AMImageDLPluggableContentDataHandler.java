@@ -196,9 +196,8 @@ public class AMImageDLPluggableContentDataHandler
 	}
 
 	private AdaptiveMedia<AMImageProcessor> _getExportedMedia(
-			PortletDataContext portletDataContext, FileEntry fileEntry,
-			AMImageConfigurationEntry amImageConfigurationEntry)
-		throws PortalException {
+		PortletDataContext portletDataContext, FileEntry fileEntry,
+		AMImageConfigurationEntry amImageConfigurationEntry) {
 
 		String basePath = _getAMBasePath(
 			fileEntry, amImageConfigurationEntry.getUUID());
