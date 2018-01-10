@@ -124,12 +124,12 @@ public class AMImageDLPluggableContentDataHandler
 		for (AdaptiveMedia<AMImageProcessor> adaptiveMedia :
 				adaptiveMediaList) {
 
-			_exportMedia(portletDataContext, fileVersion, adaptiveMedia);
+			_exportMedia(portletDataContext, fileEntry, adaptiveMedia);
 		}
 	}
 
 	private void _exportMedia(
-			PortletDataContext portletDataContext, FileVersion fileVersion,
+			PortletDataContext portletDataContext, FileEntry fileEntry,
 			AdaptiveMedia<AMImageProcessor> adaptiveMedia)
 		throws IOException {
 
@@ -142,7 +142,7 @@ public class AMImageDLPluggableContentDataHandler
 		}
 
 		String basePath = _getAMBasePath(
-			fileVersion, configurationUuidOptional.get());
+			fileEntry, configurationUuidOptional.get());
 
 		if (!portletDataContext.isPerformDirectBinaryImport()) {
 			try (InputStream inputStream = adaptiveMedia.getInputStream()) {
@@ -155,10 +155,12 @@ public class AMImageDLPluggableContentDataHandler
 	}
 
 	private Stream<AdaptiveMedia<AMImageProcessor>> _getAdaptiveMediaStream(
-		FileVersion fileVersion,
+		FileEntry fileEntry,
 		AMImageConfigurationEntry amImageConfigurationEntry) {
 
 		try {
+			FileVersion fileVersion = fileEntry.getFileVersion();
+
 			return _amImageFinder.getAdaptiveMediaStream(
 				amImageQueryBuilder -> amImageQueryBuilder.forFileVersion(
 					fileVersion
@@ -169,8 +171,8 @@ public class AMImageDLPluggableContentDataHandler
 		catch (PortalException pe) {
 			StringBundler sb = new StringBundler(4);
 
-			sb.append("Unable to find adaptive media for file version ");
-			sb.append(fileVersion.getFileVersionId());
+			sb.append("Unable to find adaptive media for file entry ");
+			sb.append(fileEntry.getFileEntryId());
 			sb.append(" and configuration ");
 			sb.append(amImageConfigurationEntry.getUUID());
 
@@ -180,10 +182,10 @@ public class AMImageDLPluggableContentDataHandler
 		return Stream.empty();
 	}
 
-	private String _getAMBasePath(FileVersion fileVersion, String uuid) {
+	private String _getAMBasePath(FileEntry fileEntry, String uuid) {
 		return String.format(
-			"adaptive-media/%s/%s/%s", FileVersion.class.getSimpleName(),
-			fileVersion.getUuid(), uuid);
+			"adaptive-media/%s/%s/%s", FileEntry.class.getSimpleName(),
+			fileEntry.getUuid(), uuid);
 	}
 
 	private String _getConfigurationEntryBinPath(
@@ -194,11 +196,12 @@ public class AMImageDLPluggableContentDataHandler
 	}
 
 	private AdaptiveMedia<AMImageProcessor> _getExportedMedia(
-		PortletDataContext portletDataContext, FileVersion fileVersion,
-		AMImageConfigurationEntry amImageConfigurationEntry) {
+			PortletDataContext portletDataContext, FileEntry fileEntry,
+			AMImageConfigurationEntry amImageConfigurationEntry)
+		throws PortalException {
 
 		String basePath = _getAMBasePath(
-			fileVersion, amImageConfigurationEntry.getUUID());
+			fileEntry, amImageConfigurationEntry.getUUID());
 
 		String serializedAdaptiveMedia = portletDataContext.getZipEntryAsString(
 			basePath + ".json");
@@ -215,7 +218,7 @@ public class AMImageDLPluggableContentDataHandler
 		}
 
 		Stream<AdaptiveMedia<AMImageProcessor>> adaptiveMediaStream =
-			_getAdaptiveMediaStream(fileVersion, amImageConfigurationEntry);
+			_getAdaptiveMediaStream(fileEntry, amImageConfigurationEntry);
 
 		Optional<AdaptiveMedia<AMImageProcessor>> firstAdaptiveMediaOptional =
 			adaptiveMediaStream.findFirst();
@@ -250,10 +253,8 @@ public class AMImageDLPluggableContentDataHandler
 			return;
 		}
 
-		FileVersion fileVersion = fileEntry.getFileVersion();
-
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia = _getExportedMedia(
-			portletDataContext, fileVersion, amImageConfigurationEntry);
+			portletDataContext, fileEntry, amImageConfigurationEntry);
 
 		if (adaptiveMedia == null) {
 			return;
