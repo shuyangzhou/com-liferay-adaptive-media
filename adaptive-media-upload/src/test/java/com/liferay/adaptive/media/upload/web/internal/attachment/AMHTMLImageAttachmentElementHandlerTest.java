@@ -12,13 +12,11 @@
  * details.
  */
 
-package com.liferay.adaptive.media.blogs.web.internal.blogs.util;
+package com.liferay.adaptive.media.upload.web.internal.attachment;
 
-import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.portletfilerepository.PortletFileRepository;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.upload.AttachmentElementReplacer;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,7 +29,7 @@ import org.powermock.api.mockito.PowerMockito;
 /**
  * @author Alejandro Tardín
  */
-public class AMBlogsEntryAttachmentContentUpdaterTest extends PowerMockito {
+public class AMHTMLImageAttachmentElementHandlerTest extends PowerMockito {
 
 	@Before
 	public void setUp() {
@@ -43,31 +41,33 @@ public class AMBlogsEntryAttachmentContentUpdaterTest extends PowerMockito {
 			_IMAGE_FILE_ENTRY_ID
 		);
 
-		_portletFileRepository = mock(PortletFileRepository.class);
-
-		_amBlogsEntryAttachmentContentUpdater =
-			new AMBlogsEntryAttachmentContentUpdater(_portletFileRepository);
+		_defaultAttachmentElementReplacer = mock(
+			AttachmentElementReplacer.class);
 
 		when(
-			_portletFileRepository.getPortletFileEntryURL(
-				Mockito.isNull(ThemeDisplay.class), Mockito.eq(_fileEntry),
-				Mockito.eq(StringPool.BLANK))
-		).thenReturn(
-			_FILE_ENTRY_IMAGE_URL
+			_defaultAttachmentElementReplacer.replace(
+				Mockito.anyString(), Mockito.eq(_fileEntry))
+		).thenAnswer(
+			arguments -> arguments.getArgumentAt(0, String.class)
 		);
+
+		_amHTMLImageAttachmentElementReplacer =
+			new AMHTMLImageAttachmentElementReplacer(
+				_defaultAttachmentElementReplacer);
 	}
 
 	@Test
 	public void testGetBlogsEntryAttachmentFileEntryImgTag() throws Exception {
-		String imgTag =
-			_amBlogsEntryAttachmentContentUpdater.
-				getBlogsEntryAttachmentFileEntryImgTag(_fileEntry);
+		String originalImgTag = String.format(
+			"<img src=\"%s\" />", _FILE_ENTRY_IMAGE_URL);
+		String expectedImgTag = String.format(
+			"<img src=\"%s\" data-fileEntryId=\"%s\" />", _FILE_ENTRY_IMAGE_URL,
+			_IMAGE_FILE_ENTRY_ID);
 
-		Assert.assertEquals(
-			"<img data-fileEntryId=\"" + _IMAGE_FILE_ENTRY_ID + "\" src=\"" +
-				_FILE_ENTRY_IMAGE_URL +
-					"\" />",
-			imgTag);
+		String actualTag = _amHTMLImageAttachmentElementReplacer.replace(
+			originalImgTag, _fileEntry);
+
+		Assert.assertEquals(expectedImgTag, actualTag);
 	}
 
 	private static final String _FILE_ENTRY_IMAGE_URL =
@@ -76,9 +76,9 @@ public class AMBlogsEntryAttachmentContentUpdaterTest extends PowerMockito {
 	private static final long _IMAGE_FILE_ENTRY_ID =
 		RandomTestUtil.randomLong();
 
-	private AMBlogsEntryAttachmentContentUpdater
-		_amBlogsEntryAttachmentContentUpdater;
+	private AMHTMLImageAttachmentElementReplacer
+		_amHTMLImageAttachmentElementReplacer;
+	private AttachmentElementReplacer _defaultAttachmentElementReplacer;
 	private FileEntry _fileEntry;
-	private PortletFileRepository _portletFileRepository;
 
 }

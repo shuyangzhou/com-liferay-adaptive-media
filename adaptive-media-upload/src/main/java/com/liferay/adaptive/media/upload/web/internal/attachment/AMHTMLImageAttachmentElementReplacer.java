@@ -36,6 +36,9 @@ import org.osgi.service.component.annotations.Reference;
 public class AMHTMLImageAttachmentElementReplacer
 	implements AttachmentElementReplacer {
 
+	public AMHTMLImageAttachmentElementReplacer() {
+	}
+
 	@Override
 	public String replace(String originalElement, FileEntry fileEntry) {
 		Element image = _parseImgTag(
@@ -46,6 +49,12 @@ public class AMHTMLImageAttachmentElementReplacer
 			"data-fileEntryId", String.valueOf(fileEntry.getFileEntryId()));
 
 		return image.toString();
+	}
+
+	protected AMHTMLImageAttachmentElementReplacer(
+		AttachmentElementReplacer defaultAttachmentElementReplacer) {
+
+		_defaultAttachmentElementReplacer = defaultAttachmentElementReplacer;
 	}
 
 	private Element _parseImgTag(String originalImgTag) {
