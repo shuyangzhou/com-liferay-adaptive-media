@@ -106,8 +106,8 @@ public class AMImageRequestHandler
 		_pathInterpreter = pathInterpreter;
 	}
 
-	private AdaptiveMedia<AMImageProcessor>
-			_createRawAdaptiveMedia(FileVersion fileVersion)
+	private AdaptiveMedia<AMImageProcessor> _createRawAdaptiveMedia(
+			FileVersion fileVersion)
 		throws PortalException {
 
 		Map<String, String> properties = new HashMap<>();
@@ -237,8 +237,8 @@ public class AMImageRequestHandler
 		).findFirst();
 	}
 
-	private Comparator<AdaptiveMedia<AMImageProcessor>>
-		_getComparator(Integer configurationWidth) {
+	private Comparator<AdaptiveMedia<AMImageProcessor>> _getComparator(
+		Integer configurationWidth) {
 
 		return Comparator.comparingInt(
 			adaptiveMedia -> _getDistance(configurationWidth, adaptiveMedia));

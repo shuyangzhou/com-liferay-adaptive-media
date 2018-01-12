@@ -148,8 +148,8 @@ public class MediaQueryProviderImpl implements MediaQueryProvider {
 			_getFileEntryURL(fileEntry, amImageConfigurationEntry));
 	}
 
-	private Collection<AdaptiveMedia<AMImageProcessor>>
-			_getAdaptiveMedias(FileEntry fileEntry)
+	private Collection<AdaptiveMedia<AMImageProcessor>> _getAdaptiveMedias(
+			FileEntry fileEntry)
 		throws PortalException {
 
 		Collection<AMImageConfigurationEntry> amImageConfigurationEntries =
