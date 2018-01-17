@@ -148,17 +148,16 @@ public class AMImageRequestHandler
 		AMImageAttributeMapping amImageAttributeMapping) {
 
 		try {
+			Optional<String> valueOptional =
+				amImageAttributeMapping.getValueOptional(
+					AMAttribute.getConfigurationUuidAMAttribute());
+
 			Optional<AMImageConfigurationEntry>
-				amImageConfigurationEntryOptional =
-					amImageAttributeMapping.getValueOptional(
-						AMAttribute.getConfigurationUuidAMAttribute()
-					).flatMap(
-						configurationUuid ->
-							_amImageConfigurationHelper.
-								getAMImageConfigurationEntry(
-									fileVersion.getCompanyId(),
-									configurationUuid)
-					);
+				amImageConfigurationEntryOptional = valueOptional.flatMap(
+					configurationUuid ->
+						_amImageConfigurationHelper.
+							getAMImageConfigurationEntry(
+								fileVersion.getCompanyId(), configurationUuid));
 
 			if (!amImageConfigurationEntryOptional.isPresent()) {
 				return Optional.empty();
@@ -228,13 +227,15 @@ public class AMImageRequestHandler
 			AMImageConfigurationEntry amImageConfigurationEntry)
 		throws PortalException {
 
-		return _amImageFinder.getAdaptiveMediaStream(amImageQueryBuilder ->
-			amImageQueryBuilder.forFileVersion(
-				fileVersion
-			).forConfiguration(
-				amImageConfigurationEntry.getUUID()
-			).done()
-		).findFirst();
+		Stream<AdaptiveMedia<AMImageProcessor>> adaptiveMediaStream =
+			_amImageFinder.getAdaptiveMediaStream(
+				amImageQueryBuilder -> amImageQueryBuilder.forFileVersion(
+					fileVersion
+				).forConfiguration(
+					amImageConfigurationEntry.getUUID()
+				).done());
+
+		return adaptiveMediaStream.findFirst();
 	}
 
 	private Comparator<AdaptiveMedia<AMImageProcessor>> _getComparator(

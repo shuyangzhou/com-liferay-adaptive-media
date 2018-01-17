@@ -482,7 +482,10 @@ public class AMImageConfigurationHelperImpl
 		long companyId) {
 
 		if (_configurationEntries.containsKey(companyId)) {
-			return _configurationEntries.get(companyId).stream();
+			Collection<AMImageConfigurationEntry> amImageConfigurationEntries =
+				_configurationEntries.get(companyId);
+
+			return amImageConfigurationEntries.stream();
 		}
 
 		try {
