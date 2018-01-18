@@ -67,7 +67,9 @@ public class AMHTMLImageAttachmentElementReplacer
 
 		document.outputSettings(outputSettings);
 
-		return document.body().child(0);
+		Element element = document.body();
+
+		return element.child(0);
 	}
 
 	@Reference(
